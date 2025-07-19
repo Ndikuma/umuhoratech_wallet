@@ -1,0 +1,72 @@
+{% extends 'wallet/base.html' %}
+
+{% block title %}Transaction History{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 bg-purple-600">
+        <h3 class="text-lg leading-6 font-medium text-white">Transaction History</h3>
+    </div>
+    <div class="border-t border-gray-200">
+        {% if transactions %}
+            <ul class="divide-y divide-gray-200">
+                {% for tx in transactions %}
+                    <li class="px-6 py-4 hover:bg-gray-50">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center 
+                                    {% if tx.transaction_type == 'receive' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                    {% if tx.transaction_type == 'receive' %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                        </svg>
+                                    {% else %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                        </svg>
+                                    {% endif %}
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-900">
+                                        {{ tx.get_transaction_type_display }}: {{ tx.amount }} BTC
+                                    </p>
+                                    <p class="text-sm text-gray-500 truncate">Address: {{ tx.address }}</p>
+                                    <p class="text-xs text-gray-500">TXID: {{ tx.txid|truncatechars:20 }}</p>
+                                </div>
+                            </div>
+                            <div class="ml-2 flex-shrink-0 flex flex-col items-end">
+                                <p class="text-xs text-gray-500">
+                                    {{ tx.timestamp|date:"M d, Y H:i" }}
+                                </p>
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    {% if tx.confirmations < 6 %}bg-yellow-100 text-yellow-800{% else %}bg-green-100 text-green-800{% endif %}">
+                                    {% if tx.confirmations < 6 %}
+                                        {{ tx.confirmations }} confirmations
+                                    {% else %}
+                                        Confirmed
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            
+            <div class="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Previous
+                    </a>
+                    <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Next
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="px-4 py-5 sm:p-6 text-center">
+                <p class="text-gray-500">No transactions yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
