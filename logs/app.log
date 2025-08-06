@@ -901,3 +901,5 @@ INFO 2025-08-06 10:40:55,262 Watching for file changes with StatReloader
 INFO 2025-08-06 10:40:58,477 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
 INFO 2025-08-06 10:41:01,210 Watching for file changes with StatReloader
 INFO 2025-08-06 10:41:19,695 "POST /transactions/send/ HTTP/1.1" 201 850
+INFO 2025-08-06 16:46:05,369 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/settings.py changed, reloading.
+INFO 2025-08-06 16:46:13,958 Watching for file changes with StatReloader
