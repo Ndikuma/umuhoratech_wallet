@@ -1,0 +1,6 @@
+{
+  "app_type": "wsgi",
+  "startup_file": "passenger_wsgi.py",
+  "python": "/home/btcshulevgfhnehg/virtualenv/umuhoratech_wallet/3.12/bin/python"
+}
+
