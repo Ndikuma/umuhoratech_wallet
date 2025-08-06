@@ -1,0 +1,903 @@
+ERROR 2025-07-30 10:09:22,930 Internal Server Error: /api/v1/auth/register/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 151, in _compile
+    return re.compile(regex)
+           ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/re/__init__.py", line 228, in compile
+    return _compile(pattern, flags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/re/__init__.py", line 307, in _compile
+    p = _compiler.compile(pattern, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/re/_compiler.py", line 745, in compile
+    p = _parser.parse(p, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/re/_parser.py", line 979, in parse
+    p = _parse_sub(source, state, flags & SRE_FLAG_VERBOSE, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/re/_parser.py", line 460, in _parse_sub
+    itemsappend(_parse(source, state, verbose, nested + 1,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/re/_parser.py", line 857, in _parse
+    raise source.error(err.msg, len(name) + 1) from None
+re.error: redefinition of group name 'format' as group 2; was group 1 at position 42
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 313, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 668, in resolve
+    sub_match = pattern.resolve(new_path)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 668, in resolve
+    sub_match = pattern.resolve(new_path)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 668, in resolve
+    sub_match = pattern.resolve(new_path)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  [Previous line repeated 1 more time]
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 462, in resolve
+    match = self.pattern.match(path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 205, in match
+    if self._is_endpoint and self.regex.pattern.endswith("$")
+                             ^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 142, in __get__
+    instance.__dict__["regex"] = self._compile(pattern)
+                                 ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 153, in _compile
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: "^auth/login\.(?P<format>[a-z0-9]+)/?\.(?P<format>[a-z0-9]+)/?$" is not a valid regular expression: redefinition of group name 'format' as group 2; was group 1 at position 42
+ERROR 2025-07-30 10:13:43,713 Internal Server Error: /api/v1/auth/register/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 151, in _compile
+    return re.compile(regex)
+           ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/re/__init__.py", line 228, in compile
+    return _compile(pattern, flags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/re/__init__.py", line 307, in _compile
+    p = _compiler.compile(pattern, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/re/_compiler.py", line 745, in compile
+    p = _parser.parse(p, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/re/_parser.py", line 979, in parse
+    p = _parse_sub(source, state, flags & SRE_FLAG_VERBOSE, 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/re/_parser.py", line 460, in _parse_sub
+    itemsappend(_parse(source, state, verbose, nested + 1,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/re/_parser.py", line 857, in _parse
+    raise source.error(err.msg, len(name) + 1) from None
+re.error: redefinition of group name 'format' as group 2; was group 1 at position 42
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 313, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 668, in resolve
+    sub_match = pattern.resolve(new_path)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 668, in resolve
+    sub_match = pattern.resolve(new_path)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 668, in resolve
+    sub_match = pattern.resolve(new_path)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  [Previous line repeated 1 more time]
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 462, in resolve
+    match = self.pattern.match(path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 205, in match
+    if self._is_endpoint and self.regex.pattern.endswith("$")
+                             ^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 142, in __get__
+    instance.__dict__["regex"] = self._compile(pattern)
+                                 ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 153, in _compile
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: "^auth/login\.(?P<format>[a-z0-9]+)/?\.(?P<format>[a-z0-9]+)/?$" is not a valid regular expression: redefinition of group name 'format' as group 2; was group 1 at position 42
+INFO 2025-07-30 10:15:11,363 Watching for file changes with StatReloader
+INFO 2025-07-30 10:15:32,935 Watching for file changes with StatReloader
+ERROR 2025-07-30 10:15:38,837 Invalid HTTP_HOST header: '0.0.0.0:3000'. You may need to add '0.0.0.0' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/utils/deprecation.py", line 128, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '0.0.0.0:3000'. You may need to add '0.0.0.0' to ALLOWED_HOSTS.
+WARNING 2025-07-30 10:15:39,023 Bad Request: /
+WARNING 2025-07-30 10:15:39,025 "GET / HTTP/1.1" 400 75279
+ERROR 2025-07-30 10:15:39,446 Invalid HTTP_HOST header: '0.0.0.0:3000'. You may need to add '0.0.0.0' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/utils/deprecation.py", line 128, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '0.0.0.0:3000'. You may need to add '0.0.0.0' to ALLOWED_HOSTS.
+WARNING 2025-07-30 10:15:39,640 Bad Request: /favicon.ico
+WARNING 2025-07-30 10:15:39,642 "GET /favicon.ico HTTP/1.1" 400 75227
+INFO 2025-07-30 10:15:53,921 "GET / HTTP/1.1" 200 398
+WARNING 2025-07-30 10:15:54,210 Not Found: /favicon.ico
+WARNING 2025-07-30 10:15:54,215 "GET /favicon.ico HTTP/1.1" 404 3123
+ERROR 2025-07-30 10:16:16,959 "GET //api/v1/ HTTP/1.1" 500 59
+ERROR 2025-07-30 10:16:25,929 "GET /api/v1/ HTTP/1.1" 500 59
+WARNING 2025-07-30 10:16:49,220 Not Found: /api
+WARNING 2025-07-30 10:16:49,223 "GET /api HTTP/1.1" 404 3099
+WARNING 2025-07-30 10:17:06,242 Not Found: /api/health
+WARNING 2025-07-30 10:17:06,247 "GET /api/health HTTP/1.1" 404 3120
+WARNING 2025-07-30 10:17:27,588 Not Found: /api/health/
+WARNING 2025-07-30 10:17:27,596 "GET /api/health/ HTTP/1.1" 404 3123
+WARNING 2025-07-30 10:18:38,604 Not Found: /docs/
+WARNING 2025-07-30 10:18:38,605 "GET /docs/ HTTP/1.1" 404 3105
+ERROR 2025-07-30 10:19:10,225 "GET /api/v1/docs/ HTTP/1.1" 500 59
+INFO 2025-07-30 10:20:17,123 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/urls.py changed, reloading.
+INFO 2025-07-30 10:20:19,628 Watching for file changes with StatReloader
+ERROR 2025-07-30 10:20:32,907 "GET /api/v1/docs/ HTTP/1.1" 500 59
+WARNING 2025-07-30 10:20:38,846 Not Found: /
+WARNING 2025-07-30 10:20:38,853 "GET / HTTP/1.1" 404 2912
+ERROR 2025-07-30 10:20:54,238 "GET /api/v1/ HTTP/1.1" 500 59
+INFO 2025-07-30 10:23:28,677 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/urls.py changed, reloading.
+INFO 2025-07-30 10:23:31,142 Watching for file changes with StatReloader
+WARNING 2025-07-30 10:23:35,223 Unauthorized: /api/v1/
+WARNING 2025-07-30 10:23:35,225 "GET /api/v1/ HTTP/1.1" 401 179
+INFO 2025-07-30 10:24:18,775 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/settings.py changed, reloading.
+INFO 2025-07-30 10:24:21,676 Watching for file changes with StatReloader
+WARNING 2025-07-30 10:24:27,394 Unauthorized: /api/v1/
+WARNING 2025-07-30 10:24:27,396 "GET /api/v1/ HTTP/1.1" 401 10188
+INFO 2025-07-30 10:24:27,600 "GET /static/rest_framework/css/default.css HTTP/1.1" 200 1152
+INFO 2025-07-30 10:24:27,622 "GET /static/rest_framework/css/bootstrap.min.css HTTP/1.1" 200 121457
+INFO 2025-07-30 10:24:27,626 "GET /static/rest_framework/js/ajax-form.js HTTP/1.1" 200 3796
+INFO 2025-07-30 10:24:27,634 "GET /static/rest_framework/css/prettify.css HTTP/1.1" 200 817
+INFO 2025-07-30 10:24:27,649 "GET /static/rest_framework/js/jquery-3.7.1.min.js HTTP/1.1" 200 87533
+INFO 2025-07-30 10:24:27,660 "GET /static/rest_framework/css/bootstrap-tweaks.css HTTP/1.1" 200 3426
+INFO 2025-07-30 10:24:27,686 "GET /static/rest_framework/js/csrf.js HTTP/1.1" 200 1793
+INFO 2025-07-30 10:24:27,687 "GET /static/rest_framework/js/prettify-min.js HTTP/1.1" 200 13632
+INFO 2025-07-30 10:24:27,689 "GET /static/rest_framework/js/bootstrap.min.js HTTP/1.1" 200 39680
+INFO 2025-07-30 10:24:27,692 "GET /static/rest_framework/js/default.js HTTP/1.1" 200 1268
+INFO 2025-07-30 10:24:27,697 "GET /static/rest_framework/js/load-ajax-form.js HTTP/1.1" 200 59
+INFO 2025-07-30 10:24:27,793 "GET /static/rest_framework/img/grid.png HTTP/1.1" 200 1458
+INFO 2025-07-30 10:24:57,332 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/settings.py changed, reloading.
+INFO 2025-07-30 10:25:01,199 Watching for file changes with StatReloader
+INFO 2025-07-30 10:25:18,353 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/settings.py changed, reloading.
+INFO 2025-07-30 10:25:22,037 Watching for file changes with StatReloader
+INFO 2025-07-30 10:25:28,443 "GET /api/v1/ HTTP/1.1" 200 10499
+WARNING 2025-07-30 10:25:32,087 Unauthorized: /api/v1/users/
+WARNING 2025-07-30 10:25:32,091 "GET /api/v1/users/ HTTP/1.1" 401 10324
+INFO 2025-07-30 10:25:34,489 "GET /api/v1/ HTTP/1.1" 200 10499
+WARNING 2025-07-30 10:25:36,532 Unauthorized: /api/v1/wallets/
+WARNING 2025-07-30 10:25:36,535 "GET /api/v1/wallets/ HTTP/1.1" 401 10346
+INFO 2025-07-30 10:25:38,626 "GET /api/v1/ HTTP/1.1" 200 10499
+INFO 2025-07-30 10:26:37,898 "GET /api/v1/docs HTTP/1.1" 301 0
+INFO 2025-07-30 10:26:38,001 "GET /api/v1/docs/ HTTP/1.1" 200 4659
+INFO 2025-07-30 10:28:02,225 "GET /api/v1/schema/ HTTP/1.1" 200 49513
+WARNING 2025-07-30 10:28:53,631 Not Found: /api/v1/redocs
+WARNING 2025-07-30 10:28:53,633 "GET /api/v1/redocs HTTP/1.1" 404 20955
+INFO 2025-07-30 10:28:58,728 "GET /api/v1/redoc HTTP/1.1" 301 0
+INFO 2025-07-30 10:28:58,755 "GET /api/v1/redoc/ HTTP/1.1" 200 742
+INFO 2025-07-30 10:30:18,157 "GET /api/v1/schema/ HTTP/1.1" 200 25222
+INFO 2025-07-30 10:31:21,157 "GET /api/v1/docs/ HTTP/1.1" 200 4659
+INFO 2025-07-30 10:31:22,615 "GET /api/v1/schema/ HTTP/1.1" 200 49513
+WARNING 2025-07-30 10:32:53,423 Bad Request: /api/v1/auth/register/
+WARNING 2025-07-30 10:32:53,425 "POST /api/v1/auth/register/ HTTP/1.1" 400 189
+ERROR 2025-07-30 10:33:23,668 Internal Server Error: /api/v1/auth/register/
+ERROR 2025-07-30 10:33:23,673 "POST /api/v1/auth/register/ HTTP/1.1" 500 136
+INFO 2025-07-30 10:34:49,482 "GET /admin HTTP/1.1" 301 0
+INFO 2025-07-30 10:34:49,583 "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-07-30 10:34:49,737 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4160
+INFO 2025-07-30 10:34:50,173 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-07-30 10:34:50,174 "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2025-07-30 10:34:50,176 "GET /static/admin/css/responsive.css HTTP/1.1" 200 17972
+INFO 2025-07-30 10:34:50,178 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-07-30 10:34:50,180 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2804
+INFO 2025-07-30 10:34:50,183 "GET /static/admin/css/base.css HTTP/1.1" 200 22092
+INFO 2025-07-30 10:34:50,236 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-07-30 10:34:59,807 "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4321
+INFO 2025-07-30 10:35:08,010 "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4321
+INFO 2025-07-31 14:15:45,080 Watching for file changes with StatReloader
+WARNING 2025-07-31 14:15:54,484 Not Found: /
+WARNING 2025-07-31 14:15:54,487 "GET / HTTP/1.1" 404 2912
+WARNING 2025-07-31 14:16:13,576 Not Found: /api/v1/doc
+WARNING 2025-07-31 14:16:13,579 "GET /api/v1/doc HTTP/1.1" 404 20946
+INFO 2025-07-31 14:16:24,666 "GET /api/v1/docs HTTP/1.1" 301 0
+INFO 2025-07-31 14:16:24,912 "GET /api/v1/docs/ HTTP/1.1" 200 4659
+INFO 2025-07-31 14:16:33,887 "GET /api/v1/schema/ HTTP/1.1" 200 49513
+WARNING 2025-07-31 14:16:48,065 Unauthorized: /api/v1/wallets/balance/
+WARNING 2025-07-31 14:16:48,067 "GET /api/v1/wallets/balance/ HTTP/1.1" 401 179
+WARNING 2025-07-31 14:17:19,819 Unauthorized: /api/v1/auth/login/
+WARNING 2025-07-31 14:17:19,820 "POST /api/v1/auth/login/ HTTP/1.1" 401 126
+WARNING 2025-07-31 14:17:42,193 Unauthorized: /api/v1/auth/login/
+WARNING 2025-07-31 14:17:42,194 "POST /api/v1/auth/login/ HTTP/1.1" 401 126
+WARNING 2025-07-31 14:18:00,327 Unauthorized: /api/v1/auth/login/
+WARNING 2025-07-31 14:18:00,332 "POST /api/v1/auth/login/ HTTP/1.1" 401 126
+WARNING 2025-07-31 14:18:14,231 Unauthorized: /api/v1/auth/login/
+WARNING 2025-07-31 14:18:14,232 "POST /api/v1/auth/login/ HTTP/1.1" 401 126
+WARNING 2025-07-31 14:18:35,861 Not Found: /
+WARNING 2025-07-31 14:18:35,868 "GET / HTTP/1.1" 404 2912
+INFO 2025-07-31 14:18:43,661 "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-07-31 14:18:43,812 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4160
+INFO 2025-07-31 14:18:56,868 "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4321
+INFO 2025-07-31 14:20:48,975 "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2025-07-31 14:20:49,115 "GET /admin/ HTTP/1.1" 200 7557
+INFO 2025-07-31 14:20:52,355 "GET /admin/wallet/wallet/ HTTP/1.1" 200 10212
+INFO 2025-07-31 14:20:52,598 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-07-31 14:20:52,606 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-31 14:20:54,450 "GET /admin/wallet/wallet/2/change/ HTTP/1.1" 200 15088
+INFO 2025-07-31 14:20:54,517 "GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+INFO 2025-07-31 14:20:54,522 "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+INFO 2025-07-31 14:20:54,529 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-31 14:20:54,766 "GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+INFO 2025-07-31 14:20:59,299 "GET /admin/wallet/wallet/ HTTP/1.1" 200 10212
+INFO 2025-07-31 14:20:59,365 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-31 14:21:01,346 "GET /admin/wallet/wallet/1/change/ HTTP/1.1" 200 15064
+INFO 2025-07-31 14:21:01,490 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-31 14:21:05,370 "GET /admin/wallet/wallet/ HTTP/1.1" 200 10212
+INFO 2025-07-31 14:21:05,481 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-07-31 14:21:34,912 "POST /api/v1/auth/login/ HTTP/1.1" 200 1081
+WARNING 2025-07-31 14:22:37,955 Unauthorized: /api/v1/transactions/
+WARNING 2025-07-31 14:22:37,961 "GET /api/v1/transactions/ HTTP/1.1" 401 179
+INFO 2025-07-31 14:25:45,593 "POST /api/v1/auth/login/ HTTP/1.1" 200 1080
+WARNING 2025-07-31 14:27:19,755 Unauthorized: /api/v1/transactions/
+WARNING 2025-07-31 14:27:19,757 "GET /api/v1/transactions/ HTTP/1.1" 401 179
+WARNING 2025-07-31 14:27:47,332 Unauthorized: /api/v1/transactions/
+WARNING 2025-07-31 14:27:47,334 "GET /api/v1/transactions/ HTTP/1.1" 401 179
+INFO 2025-07-31 14:28:13,335 "GET /api/v1/transactions/ HTTP/1.1" 200 52
+INFO 2025-07-31 14:28:31,987 "GET /api/v1/transactions/ HTTP/1.1" 200 52
+WARNING 2025-07-31 14:29:19,837 Unauthorized: /api/v1/wallets/balance/
+WARNING 2025-07-31 14:29:19,843 "GET /api/v1/wallets/balance/ HTTP/1.1" 401 179
+INFO 2025-07-31 14:29:39,924 "GET /api/v1/wallets/balance/ HTTP/1.1" 200 226
+INFO 2025-07-31 14:29:54,570 "GET /api/v1/wallets/balance/ HTTP/1.1" 200 226
+INFO 2025-07-31 14:29:56,391 "GET /api/v1/wallets/balance/ HTTP/1.1" 200 226
+INFO 2025-07-31 14:29:57,194 "GET /api/v1/wallets/balance/ HTTP/1.1" 200 226
+INFO 2025-07-31 14:29:58,056 "GET /api/v1/wallets/balance/ HTTP/1.1" 200 226
+INFO 2025-07-31 14:29:58,879 "GET /api/v1/wallets/balance/ HTTP/1.1" 200 226
+INFO 2025-07-31 14:29:59,583 "GET /api/v1/wallets/balance/ HTTP/1.1" 200 226
+INFO 2025-07-31 14:30:00,308 "GET /api/v1/wallets/balance/ HTTP/1.1" 200 226
+INFO 2025-07-31 14:30:01,014 "GET /api/v1/wallets/balance/ HTTP/1.1" 200 226
+INFO 2025-07-31 14:30:01,750 "GET /api/v1/wallets/balance/ HTTP/1.1" 200 226
+INFO 2025-07-31 14:30:02,437 "GET /api/v1/wallets/balance/ HTTP/1.1" 200 226
+INFO 2025-07-31 14:30:20,420 "GET /api/v1/wallets/balance/ HTTP/1.1" 200 226
+ERROR 2025-07-31 14:33:08,165 Internal Server Error: /api/v1/auth/register/
+WARNING 2025-07-31 14:36:35,746 Not Found: /api/v1/redocs
+WARNING 2025-07-31 14:36:35,749 "GET /api/v1/redocs HTTP/1.1" 404 20955
+INFO 2025-07-31 14:36:44,274 "GET /api/v1/redoc HTTP/1.1" 301 0
+INFO 2025-07-31 14:36:44,301 "GET /api/v1/redoc/ HTTP/1.1" 200 742
+INFO 2025-07-31 14:36:50,931 "GET /api/v1/schema/ HTTP/1.1" 200 25222
+INFO 2025-08-05 09:59:48,850 Watching for file changes with StatReloader
+WARNING 2025-08-05 09:59:55,607 Not Found: /
+WARNING 2025-08-05 09:59:55,608 "GET / HTTP/1.1" 404 2912
+WARNING 2025-08-05 09:59:56,057 Not Found: /favicon.ico
+WARNING 2025-08-05 09:59:56,064 "GET /favicon.ico HTTP/1.1" 404 2963
+INFO 2025-08-05 10:00:24,926 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/urls.py changed, reloading.
+INFO 2025-08-05 10:00:27,252 Watching for file changes with StatReloader
+INFO 2025-08-05 10:00:34,211 "GET / HTTP/1.1" 200 10415
+INFO 2025-08-05 10:00:34,404 "GET /static/rest_framework/css/bootstrap-tweaks.css HTTP/1.1" 304 0
+INFO 2025-08-05 10:00:34,433 "GET /static/rest_framework/css/prettify.css HTTP/1.1" 304 0
+INFO 2025-08-05 10:00:34,437 "GET /static/rest_framework/js/ajax-form.js HTTP/1.1" 304 0
+INFO 2025-08-05 10:00:34,494 "GET /static/rest_framework/js/csrf.js HTTP/1.1" 304 0
+INFO 2025-08-05 10:00:34,495 "GET /static/rest_framework/css/default.css HTTP/1.1" 304 0
+INFO 2025-08-05 10:00:34,503 "GET /static/rest_framework/js/default.js HTTP/1.1" 304 0
+INFO 2025-08-05 10:00:34,521 "GET /static/rest_framework/js/prettify-min.js HTTP/1.1" 304 0
+INFO 2025-08-05 10:00:34,531 "GET /static/rest_framework/js/bootstrap.min.js HTTP/1.1" 200 39680
+INFO 2025-08-05 10:00:34,532 "GET /static/rest_framework/js/jquery-3.7.1.min.js HTTP/1.1" 200 87533
+INFO 2025-08-05 10:00:34,569 "GET /static/rest_framework/css/bootstrap.min.css HTTP/1.1" 200 121457
+INFO 2025-08-05 10:00:34,602 "GET /static/rest_framework/js/load-ajax-form.js HTTP/1.1" 304 0
+INFO 2025-08-05 10:00:34,737 "GET /static/rest_framework/img/grid.png HTTP/1.1" 304 0
+WARNING 2025-08-05 10:00:37,059 Unauthorized: /users/
+WARNING 2025-08-05 10:00:37,061 "GET /users/ HTTP/1.1" 401 10282
+INFO 2025-08-05 10:00:49,960 "GET / HTTP/1.1" 200 10415
+WARNING 2025-08-05 10:00:52,054 Unauthorized: /wallets/
+WARNING 2025-08-05 10:00:52,063 "GET /wallets/ HTTP/1.1" 401 10304
+INFO 2025-08-05 10:00:57,386 "GET / HTTP/1.1" 200 10415
+WARNING 2025-08-05 10:00:59,433 Unauthorized: /transactions/
+WARNING 2025-08-05 10:00:59,435 "GET /transactions/ HTTP/1.1" 401 10359
+INFO 2025-08-05 10:01:06,264 "GET / HTTP/1.1" 200 10415
+INFO 2025-08-05 10:01:14,611 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:02:12,122 "GET /docs/ HTTP/1.1" 200 4652
+ERROR 2025-08-05 10:06:42,750 Internal Server Error: /auth/login
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to localhost:8000/auth/login/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2025-08-05 10:06:42,757 "POST /auth/login HTTP/1.1" 500 75039
+WARNING 2025-08-05 10:06:58,064 Unsupported Media Type: /auth/login/
+WARNING 2025-08-05 10:06:58,066 "POST /auth/login/ HTTP/1.1" 415 188
+WARNING 2025-08-05 10:07:37,573 Unsupported Media Type: /auth/login/
+WARNING 2025-08-05 10:07:37,574 "POST /auth/login/ HTTP/1.1" 415 188
+ERROR 2025-08-05 10:07:58,652 Internal Server Error: /auth/login/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/response.py", line 74, in rendered_content
+    ret = renderer.render(self.data, accepted_media_type, context)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/renderers.py", line 727, in render
+    context = self.get_context(data, accepted_media_type, renderer_context)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/renderers.py", line 658, in get_context
+    raw_data_post_form = self.get_raw_data_form(data, view, 'POST', request)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/renderers.py", line 554, in get_raw_data_form
+    serializer = view.get_serializer()
+                 ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/generics.py", line 112, in get_serializer
+    serializer_class = self.get_serializer_class()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/generics.py", line 126, in get_serializer_class
+    assert self.serializer_class is not None, (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'AuthViewSet' should either include a `serializer_class` attribute, or override the `get_serializer_class()` method.
+ERROR 2025-08-05 10:07:58,660 "GET /auth/login/ HTTP/1.1" 500 103940
+INFO 2025-08-05 10:15:30,987 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py changed, reloading.
+INFO 2025-08-05 10:15:33,929 Watching for file changes with StatReloader
+ERROR 2025-08-05 10:15:34,981 Internal Server Error: /auth/login/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/response.py", line 74, in rendered_content
+    ret = renderer.render(self.data, accepted_media_type, context)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/renderers.py", line 727, in render
+    context = self.get_context(data, accepted_media_type, renderer_context)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/renderers.py", line 658, in get_context
+    raw_data_post_form = self.get_raw_data_form(data, view, 'POST', request)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/renderers.py", line 554, in get_raw_data_form
+    serializer = view.get_serializer()
+                 ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/generics.py", line 112, in get_serializer
+    serializer_class = self.get_serializer_class()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/generics.py", line 126, in get_serializer_class
+    assert self.serializer_class is not None, (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'AuthViewSet' should either include a `serializer_class` attribute, or override the `get_serializer_class()` method.
+ERROR 2025-08-05 10:15:34,999 "GET /auth/login/ HTTP/1.1" 500 104077
+WARNING 2025-08-05 10:15:39,582 Not Found: /auth/
+WARNING 2025-08-05 10:15:39,588 "GET /auth/ HTTP/1.1" 404 17148
+ERROR 2025-08-05 10:15:52,893 Internal Server Error: /auth/register/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/response.py", line 74, in rendered_content
+    ret = renderer.render(self.data, accepted_media_type, context)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/renderers.py", line 727, in render
+    context = self.get_context(data, accepted_media_type, renderer_context)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/renderers.py", line 658, in get_context
+    raw_data_post_form = self.get_raw_data_form(data, view, 'POST', request)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/renderers.py", line 554, in get_raw_data_form
+    serializer = view.get_serializer()
+                 ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/generics.py", line 112, in get_serializer
+    serializer_class = self.get_serializer_class()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/generics.py", line 126, in get_serializer_class
+    assert self.serializer_class is not None, (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'AuthViewSet' should either include a `serializer_class` attribute, or override the `get_serializer_class()` method.
+ERROR 2025-08-05 10:15:52,904 "GET /auth/register/ HTTP/1.1" 500 103982
+INFO 2025-08-05 10:16:33,605 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py changed, reloading.
+INFO 2025-08-05 10:16:36,110 Watching for file changes with StatReloader
+WARNING 2025-08-05 10:21:58,567 Not Found: /api/v1/auth/register/
+INFO 2025-08-05 10:33:06,898 "GET /health/ HTTP/1.1" 200 21
+INFO 2025-08-05 10:36:08,313 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/urls.py changed, reloading.
+INFO 2025-08-05 10:36:10,667 Watching for file changes with StatReloader
+INFO 2025-08-05 10:37:40,637 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/settings.py changed, reloading.
+INFO 2025-08-05 10:37:43,229 Watching for file changes with StatReloader
+INFO 2025-08-05 10:38:18,896 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/settings.py changed, reloading.
+INFO 2025-08-05 10:38:21,791 Watching for file changes with StatReloader
+INFO 2025-08-05 10:38:27,328 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:38:32,067 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:38:55,411 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/settings.py changed, reloading.
+INFO 2025-08-05 10:38:58,049 Watching for file changes with StatReloader
+INFO 2025-08-05 10:39:05,117 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/settings.py changed, reloading.
+INFO 2025-08-05 10:39:07,909 Watching for file changes with StatReloader
+INFO 2025-08-05 10:39:24,589 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:29,190 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:38,206 "GET /schema HTTP/1.1" 301 0
+INFO 2025-08-05 10:39:41,519 "GET /schema/ HTTP/1.1" 200 22964
+INFO 2025-08-05 10:39:47,325 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:49,851 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:50,631 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:51,245 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:51,499 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:51,712 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:51,887 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:52,318 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:52,670 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:53,106 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:53,611 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:54,163 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:39:54,986 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:40:43,687 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/urls.py changed, reloading.
+INFO 2025-08-05 10:40:46,362 Watching for file changes with StatReloader
+INFO 2025-08-05 10:41:03,257 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/urls.py changed, reloading.
+INFO 2025-08-05 10:41:05,861 Watching for file changes with StatReloader
+INFO 2025-08-05 10:41:13,425 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 10:41:16,181 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-05 14:36:30,324 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py changed, reloading.
+INFO 2025-08-05 14:36:39,110 Watching for file changes with StatReloader
+WARNING 2025-08-05 14:36:45,162 Unsupported Media Type: /auth/login/
+WARNING 2025-08-05 14:36:45,164 "POST /auth/login/ HTTP/1.1" 415 188
+WARNING 2025-08-05 14:37:09,634 Not Found: /autho/
+WARNING 2025-08-05 14:37:09,636 "GET /autho/ HTTP/1.1" 404 17151
+WARNING 2025-08-05 14:37:17,082 Not Found: /auth/
+WARNING 2025-08-05 14:37:17,086 "GET /auth/ HTTP/1.1" 404 17148
+INFO 2025-08-05 14:37:24,247 "GET /auth/login HTTP/1.1" 301 0
+WARNING 2025-08-05 14:37:24,956 Method Not Allowed: /auth/login/
+WARNING 2025-08-05 14:37:24,958 "GET /auth/login/ HTTP/1.1" 405 13587
+INFO 2025-08-05 14:37:39,512 "POST /auth/login/ HTTP/1.1" 200 15714
+WARNING 2025-08-05 14:47:07,681 Unsupported Media Type: /auth/login/
+WARNING 2025-08-05 14:47:07,683 "POST /auth/login/ HTTP/1.1" 415 188
+WARNING 2025-08-05 14:47:43,767 Unauthorized: /auth/login/
+WARNING 2025-08-05 14:47:43,770 "POST /auth/login/ HTTP/1.1" 401 12680
+INFO 2025-08-05 14:48:20,814 "POST /auth/login/ HTTP/1.1" 200 15714
+WARNING 2025-08-05 15:06:08,706 Method Not Allowed: /auth/login/
+WARNING 2025-08-05 15:06:08,720 "GET /auth/login/ HTTP/1.1" 405 13587
+INFO 2025-08-05 20:45:19,084 Watching for file changes with StatReloader
+WARNING 2025-08-05 20:45:48,357 Unsupported Media Type: /auth/login/
+WARNING 2025-08-05 20:45:48,358 "POST /auth/login/ HTTP/1.1" 415 188
+INFO 2025-08-05 20:47:15,801 "POST /auth/login/ HTTP/1.1" 200 1017
+INFO 2025-08-05 20:48:21,633 "GET /users/ HTTP/1.1" 200 201
+WARNING 2025-08-05 20:48:49,777 Not Found: /wallet/
+WARNING 2025-08-05 20:48:49,779 "GET /wallet/ HTTP/1.1" 404 17154
+INFO 2025-08-05 20:49:40,961 "GET /wallets/ HTTP/1.1" 200 650
+INFO 2025-08-05 20:50:28,620 "GET /transactions/ HTTP/1.1" 200 121
+INFO 2025-08-05 20:51:51,250 "GET /wallets/balance/ HTTP/1.1" 200 220
+INFO 2025-08-05 20:52:19,734 "GET /wallets/balance/ HTTP/1.1" 200 220
+ERROR 2025-08-05 20:52:53,019 Internal Server Error: /wallets/update_balance/
+ERROR 2025-08-05 20:52:53,021 "POST /wallets/update_balance/ HTTP/1.1" 500 198
+ERROR 2025-08-05 20:53:05,387 Internal Server Error: /wallets/update_balance/
+ERROR 2025-08-05 20:53:05,390 "POST /wallets/update_balance/ HTTP/1.1" 500 198
+ERROR 2025-08-05 20:53:54,359 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-05 20:53:54,368 "POST /wallets/generate_address/ HTTP/1.1" 500 205
+INFO 2025-08-05 20:54:48,344 "POST /auth/login/ HTTP/1.1" 200 1080
+ERROR 2025-08-05 21:05:09,269 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-05 21:05:09,278 "POST /wallets/generate_address/ HTTP/1.1" 500 307
+ERROR 2025-08-05 21:05:36,509 Internal Server Error: /wallets/update_balance/
+ERROR 2025-08-05 21:05:36,511 "POST /wallets/update_balance/ HTTP/1.1" 500 300
+INFO 2025-08-05 21:12:05,998 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-05 21:12:10,717 Watching for file changes with StatReloader
+ERROR 2025-08-05 21:12:31,062 Internal Server Error: /wallets/update_balance/
+ERROR 2025-08-05 21:12:31,065 "POST /wallets/update_balance/ HTTP/1.1" 500 187
+ERROR 2025-08-05 21:16:53,894 Internal Server Error: /wallets/update_balance/
+ERROR 2025-08-05 21:16:53,895 "POST /wallets/update_balance/ HTTP/1.1" 500 187
+WARNING 2025-08-05 21:17:22,188 Method Not Allowed: /wallets/balance/
+WARNING 2025-08-05 21:17:22,194 "POST /wallets/balance/ HTTP/1.1" 405 167
+INFO 2025-08-05 21:17:31,267 "GET /wallets/balance/ HTTP/1.1" 200 226
+WARNING 2025-08-05 21:18:01,484 Method Not Allowed: /wallets/update_balance/
+WARNING 2025-08-05 21:18:01,488 "GET /wallets/update_balance/ HTTP/1.1" 405 166
+ERROR 2025-08-05 21:18:10,094 Internal Server Error: /wallets/update_balance/
+ERROR 2025-08-05 21:18:10,096 "POST /wallets/update_balance/ HTTP/1.1" 500 187
+INFO 2025-08-05 21:19:38,638 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-05 21:19:41,891 Watching for file changes with StatReloader
+ERROR 2025-08-05 21:19:50,497 Internal Server Error: /wallets/update_balance/
+ERROR 2025-08-05 21:19:50,502 "POST /wallets/update_balance/ HTTP/1.1" 500 187
+INFO 2025-08-05 21:21:17,131 "GET /wallets/balance/ HTTP/1.1" 200 226
+WARNING 2025-08-05 21:22:22,256 Method Not Allowed: /wallets/generate_address/
+WARNING 2025-08-05 21:22:22,258 "GET /wallets/generate_address/ HTTP/1.1" 405 166
+ERROR 2025-08-05 21:22:30,511 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-05 21:22:30,520 "POST /wallets/generate_address/ HTTP/1.1" 500 189
+INFO 2025-08-05 21:24:07,121 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-05 21:24:10,740 Watching for file changes with StatReloader
+INFO 2025-08-05 21:25:04,957 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-05 21:25:07,478 Watching for file changes with StatReloader
+ERROR 2025-08-05 21:25:16,614 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-05 21:25:16,617 "POST /wallets/generate_address/ HTTP/1.1" 500 189
+INFO 2025-08-05 21:25:37,098 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-05 21:25:39,925 Watching for file changes with StatReloader
+ERROR 2025-08-05 21:25:53,066 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-05 21:25:53,073 "POST /wallets/generate_address/ HTTP/1.1" 500 189
+ERROR 2025-08-05 21:27:04,096 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-05 21:27:04,104 "POST /wallets/generate_address/ HTTP/1.1" 500 283
+WARNING 2025-08-05 21:28:07,217 Not Found: /var/lib/bitcoind/regtest/wallets/user_3_nice
+WARNING 2025-08-05 21:28:07,218 "GET /var/lib/bitcoind/regtest/wallets/user_3_nice HTTP/1.1" 404 17265
+WARNING 2025-08-05 21:28:19,669 Unauthorized: /wallets/update_balance/
+WARNING 2025-08-05 21:28:19,671 "GET /wallets/update_balance/ HTTP/1.1" 401 179
+INFO 2025-08-06 09:03:23,018 Watching for file changes with StatReloader
+INFO 2025-08-06 09:06:26,956 "GET /auth/login HTTP/1.1" 301 0
+WARNING 2025-08-06 09:06:27,018 Unauthorized: /auth/login/
+WARNING 2025-08-06 09:06:27,020 "GET /auth/login/ HTTP/1.1" 401 148
+WARNING 2025-08-06 09:06:43,041 Method Not Allowed: /auth/login/
+WARNING 2025-08-06 09:06:43,043 "GET /auth/login/ HTTP/1.1" 405 166
+INFO 2025-08-06 09:06:54,487 "POST /auth/login/ HTTP/1.1" 200 1080
+INFO 2025-08-06 09:09:23,217 "GET /wallets/ HTTP/1.1" 200 685
+WARNING 2025-08-06 09:09:48,472 Method Not Allowed: /wallets/update_balance/
+WARNING 2025-08-06 09:09:48,474 "GET /wallets/update_balance/ HTTP/1.1" 405 166
+ERROR 2025-08-06 09:09:59,264 Internal Server Error: /wallets/update_balance/
+ERROR 2025-08-06 09:09:59,267 "POST /wallets/update_balance/ HTTP/1.1" 500 300
+INFO 2025-08-06 09:34:24,387 "GET /docs/ HTTP/1.1" 200 4652
+INFO 2025-08-06 09:34:29,811 "GET /schema/ HTTP/1.1" 200 46000
+INFO 2025-08-06 09:35:24,641 "GET /redoc HTTP/1.1" 301 0
+INFO 2025-08-06 09:35:24,751 "GET /redoc/ HTTP/1.1" 200 735
+WARNING 2025-08-06 09:35:31,289 Not Found: /favicon.ico
+WARNING 2025-08-06 09:35:31,303 "GET /favicon.ico HTTP/1.1" 404 17166
+INFO 2025-08-06 09:35:31,594 "GET /schema/ HTTP/1.1" 200 23352
+INFO 2025-08-06 09:36:16,678 "POST /auth/login/ HTTP/1.1" 200 1080
+INFO 2025-08-06 09:37:12,533 "GET /wallets/ HTTP/1.1" 200 685
+INFO 2025-08-06 09:57:55,779 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-06 09:57:58,764 Watching for file changes with StatReloader
+WARNING 2025-08-06 10:00:20,437 Method Not Allowed: /wallets/update_balance/
+WARNING 2025-08-06 10:00:20,439 "GET /wallets/update_balance/ HTTP/1.1" 405 166
+ERROR 2025-08-06 10:00:31,240 Internal Server Error: /wallets/update_balance/
+ERROR 2025-08-06 10:00:31,245 "POST /wallets/update_balance/ HTTP/1.1" 500 153
+INFO 2025-08-06 10:03:39,427 "POST /wallets/update_balance/ HTTP/1.1" 200 224
+INFO 2025-08-06 10:09:35,289 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/utils.py changed, reloading.
+INFO 2025-08-06 10:09:38,214 Watching for file changes with StatReloader
+ERROR 2025-08-06 10:10:31,087 Internal Server Error: /wallets/generate_address/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 354, in generate_address
+    address = wallet.generate_new_address(label)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 178, in generate_new_address
+    self.save(update_fields=['bitcoin_address', 'updated_at'])
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 129, in save
+    self.full_clean()
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/db/models/base.py", line 1651, in full_clean
+    raise ValidationError(errors)
+django.core.exceptions.ValidationError: {'bitcoin_address': ['Invalid Bitcoin address format', 'Invalid Bitcoin address']}
+ERROR 2025-08-06 10:10:31,126 "POST /wallets/generate_address/ HTTP/1.1" 500 113076
+ERROR 2025-08-06 10:11:22,113 Internal Server Error: /wallets/generate_address/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 354, in generate_address
+    address = wallet.generate_new_address(label)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 178, in generate_new_address
+    self.save(update_fields=['bitcoin_address', 'updated_at'])
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 129, in save
+    self.full_clean()
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/db/models/base.py", line 1651, in full_clean
+    raise ValidationError(errors)
+django.core.exceptions.ValidationError: {'bitcoin_address': ['Invalid Bitcoin address format', 'Invalid Bitcoin address']}
+ERROR 2025-08-06 10:11:22,118 "POST /wallets/generate_address/ HTTP/1.1" 500 113083
+INFO 2025-08-06 10:13:06,237 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/utils.py changed, reloading.
+INFO 2025-08-06 10:13:09,052 Watching for file changes with StatReloader
+ERROR 2025-08-06 10:13:20,261 Internal Server Error: /wallets/generate_address/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 354, in generate_address
+    address = wallet.generate_new_address(label)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 178, in generate_new_address
+    self.save(update_fields=['bitcoin_address', 'updated_at'])
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 129, in save
+    self.full_clean()
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/db/models/base.py", line 1651, in full_clean
+    raise ValidationError(errors)
+django.core.exceptions.ValidationError: {'bitcoin_address': ['Invalid Bitcoin address format']}
+ERROR 2025-08-06 10:13:20,279 "POST /wallets/generate_address/ HTTP/1.1" 500 112784
+INFO 2025-08-06 10:15:58,153 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-06 10:16:00,864 Watching for file changes with StatReloader
+ERROR 2025-08-06 10:16:10,432 Internal Server Error: /wallets/generate_address/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 354, in generate_address
+    address = wallet.generate_new_address(label)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 178, in generate_new_address
+    self.save(update_fields=['bitcoin_address', 'updated_at'])
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 129, in save
+    self.full_clean()
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/db/models/base.py", line 1651, in full_clean
+    raise ValidationError(errors)
+django.core.exceptions.ValidationError: {'bitcoin_address': ['Invalid Bitcoin address format']}
+ERROR 2025-08-06 10:16:10,443 "POST /wallets/generate_address/ HTTP/1.1" 500 112786
+INFO 2025-08-06 10:16:37,076 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-06 10:16:39,768 Watching for file changes with StatReloader
+ERROR 2025-08-06 10:18:10,710 Internal Server Error: /wallets/generate_address/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 354, in generate_address
+    address = wallet.generate_new_address(label)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 177, in generate_new_address
+    self.save(update_fields=['bitcoin_address', 'updated_at'])
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 128, in save
+    self.full_clean()
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/db/models/base.py", line 1651, in full_clean
+    raise ValidationError(errors)
+django.core.exceptions.ValidationError: {'bitcoin_address': ['Invalid Bitcoin address format']}
+ERROR 2025-08-06 10:18:10,720 "POST /wallets/generate_address/ HTTP/1.1" 500 112691
+INFO 2025-08-06 10:19:05,049 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py changed, reloading.
+INFO 2025-08-06 10:19:08,079 Watching for file changes with StatReloader
+ERROR 2025-08-06 10:19:37,590 Internal Server Error: /wallets/generate_address/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 354, in generate_address
+    address = wallet.generate_new_address(label)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 177, in generate_new_address
+    self.save(update_fields=['bitcoin_address', 'updated_at'])
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 128, in save
+    self.full_clean()
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/db/models/base.py", line 1651, in full_clean
+    raise ValidationError(errors)
+django.core.exceptions.ValidationError: {'bitcoin_address': ['Invalid Bitcoin address format']}
+ERROR 2025-08-06 10:19:37,600 "POST /wallets/generate_address/ HTTP/1.1" 500 112691
+ERROR 2025-08-06 10:19:47,405 Internal Server Error: /wallets/generate_address/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 354, in generate_address
+    address = wallet.generate_new_address(label)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 177, in generate_new_address
+    self.save(update_fields=['bitcoin_address', 'updated_at'])
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 128, in save
+    self.full_clean()
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/db/models/base.py", line 1651, in full_clean
+    raise ValidationError(errors)
+django.core.exceptions.ValidationError: {'bitcoin_address': ['Invalid Bitcoin address format']}
+ERROR 2025-08-06 10:19:47,420 "POST /wallets/generate_address/ HTTP/1.1" 500 112593
+INFO 2025-08-06 10:20:19,204 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-06 10:20:21,796 Watching for file changes with StatReloader
+INFO 2025-08-06 10:20:57,857 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-06 10:21:01,442 Watching for file changes with StatReloader
+INFO 2025-08-06 10:21:10,676 "POST /wallets/generate_address/ HTTP/1.1" 200 183
+INFO 2025-08-06 10:24:02,461 "GET /transactions/ HTTP/1.1" 200 121
+ERROR 2025-08-06 10:24:42,144 Internal Server Error: /transactions/sync/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 520, in sync
+    synced_count = wallet.sync_transactions()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 272, in sync_transactions
+    tx['time'], tz=timezone.utc
+                   ^^^^^^^^^^^^
+AttributeError: module 'django.utils.timezone' has no attribute 'utc'
+ERROR 2025-08-06 10:24:42,157 "POST /transactions/sync/ HTTP/1.1" 500 110117
+INFO 2025-08-06 10:28:30,986 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-06 10:28:34,091 Watching for file changes with StatReloader
+INFO 2025-08-06 10:28:47,667 "POST /transactions/sync/ HTTP/1.1" 200 935
+ERROR 2025-08-06 10:32:05,214 Internal Server Error: /transactions/send/
+ERROR 2025-08-06 10:32:05,216 "POST /transactions/send/ HTTP/1.1" 500 135
+INFO 2025-08-06 10:35:22,000 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-06 10:35:24,889 Watching for file changes with StatReloader
+ERROR 2025-08-06 10:35:50,160 Internal Server Error: /transactions/send/
+ERROR 2025-08-06 10:35:50,164 "POST /transactions/send/ HTTP/1.1" 500 135
+INFO 2025-08-06 10:37:15,196 Watching for file changes with StatReloader
+ERROR 2025-08-06 10:38:26,571 Internal Server Error: /transactions/send/
+ERROR 2025-08-06 10:38:26,573 "POST /transactions/send/ HTTP/1.1" 500 135
+INFO 2025-08-06 10:39:16,592 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-06 10:39:19,829 Watching for file changes with StatReloader
+INFO 2025-08-06 10:40:17,579 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-06 10:40:20,589 Watching for file changes with StatReloader
+INFO 2025-08-06 10:40:49,934 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-06 10:40:55,262 Watching for file changes with StatReloader
+INFO 2025-08-06 10:40:58,477 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-06 10:41:01,210 Watching for file changes with StatReloader
+INFO 2025-08-06 10:41:19,695 "POST /transactions/send/ HTTP/1.1" 201 850
