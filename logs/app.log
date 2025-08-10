@@ -903,3 +903,263 @@ INFO 2025-08-06 10:41:01,210 Watching for file changes with StatReloader
 INFO 2025-08-06 10:41:19,695 "POST /transactions/send/ HTTP/1.1" 201 850
 INFO 2025-08-06 16:46:05,369 /home/ndikumana/Documents/Python/Django/mini_wallet/mini_wallet/settings.py changed, reloading.
 INFO 2025-08-06 16:46:13,958 Watching for file changes with StatReloader
+INFO 2025-08-08 14:59:35,482 Watching for file changes with StatReloader
+INFO 2025-08-08 15:02:10,766 "POST /auth/login/ HTTP/1.1" 200 1204
+INFO 2025-08-08 18:26:28,594 Watching for file changes with StatReloader
+WARNING 2025-08-08 18:26:34,177 Unauthorized: /wallets/update_balance/
+WARNING 2025-08-08 18:26:34,182 "GET /wallets/update_balance/ HTTP/1.1" 401 179
+INFO 2025-08-08 18:27:11,096 "POST /auth/login/ HTTP/1.1" 200 1204
+WARNING 2025-08-08 18:28:11,686 Method Not Allowed: /wallets/update_balance/
+WARNING 2025-08-08 18:28:11,698 "GET /wallets/update_balance/ HTTP/1.1" 405 166
+INFO 2025-08-08 18:28:24,694 "POST /wallets/update_balance/ HTTP/1.1" 200 224
+INFO 2025-08-08 18:28:45,922 "POST /auth/login/ HTTP/1.1" 200 1204
+WARNING 2025-08-08 18:29:21,565 Unauthorized: /auth/login/
+WARNING 2025-08-08 18:29:21,566 "POST /auth/login/ HTTP/1.1" 401 126
+WARNING 2025-08-08 18:29:38,526 Unauthorized: /auth/login/
+WARNING 2025-08-08 18:29:38,527 "POST /auth/login/ HTTP/1.1" 401 126
+INFO 2025-08-08 18:30:58,346 "POST /auth/login/ HTTP/1.1" 200 1088
+INFO 2025-08-08 18:31:48,800 "GET /transactions/ HTTP/1.1" 200 121
+WARNING 2025-08-08 18:32:02,891 Method Not Allowed: /transactions/sync/
+WARNING 2025-08-08 18:32:02,894 "GET /transactions/sync/ HTTP/1.1" 405 166
+ERROR 2025-08-08 18:32:15,813 Internal Server Error: /transactions/sync/
+ERROR 2025-08-08 18:32:15,821 "POST /transactions/sync/ HTTP/1.1" 500 162
+ERROR 2025-08-08 18:34:14,804 Internal Server Error: /transactions/sync/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 520, in sync
+    synced_count = wallet.sync_transactions()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 271, in sync_transactions
+    'timestamp': datetime.fromtimestamp(tx['time'], tz=datetime.timezone.utc),
+                                                       ^^^^^^^^^^^^^^^^^
+AttributeError: type object 'datetime.datetime' has no attribute 'timezone'. Did you mean: 'astimezone'?
+ERROR 2025-08-08 18:34:14,856 "POST /transactions/sync/ HTTP/1.1" 500 106831
+INFO 2025-08-08 18:36:04,055 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-08 18:36:13,092 Watching for file changes with StatReloader
+ERROR 2025-08-08 18:36:22,070 Internal Server Error: /transactions/sync/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 520, in sync
+    synced_count = wallet.sync_transactions()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 271, in sync_transactions
+    'timestamp': datetime.fromtimestamp(tx['time'], tz=timezone.utc),
+                                                       ^^^^^^^^^^^^
+AttributeError: module 'django.utils.timezone' has no attribute 'utc'
+ERROR 2025-08-08 18:36:22,078 "POST /transactions/sync/ HTTP/1.1" 500 106767
+INFO 2025-08-08 18:37:06,327 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-08 18:37:09,888 Watching for file changes with StatReloader
+ERROR 2025-08-08 18:37:17,577 Internal Server Error: /transactions/sync/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 520, in sync
+    synced_count = wallet.sync_transactions()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 271, in sync_transactions
+    'timestamp': datetime.fromtimestamp(tx['time'], tz=timezone.now),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: tzinfo argument must be None or of a tzinfo subclass, not type 'function'
+ERROR 2025-08-08 18:37:17,588 "POST /transactions/sync/ HTTP/1.1" 500 106789
+INFO 2025-08-08 18:37:40,664 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-08 18:37:44,077 Watching for file changes with StatReloader
+ERROR 2025-08-08 18:37:57,292 Internal Server Error: /transactions/sync/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 520, in sync
+    synced_count = wallet.sync_transactions()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 271, in sync_transactions
+    'timestamp': datetime.fromtimestamp(tx['time'], tz=timezone.now()),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: tzinfo argument must be None or of a tzinfo subclass, not type 'datetime.datetime'
+ERROR 2025-08-08 18:37:57,302 "POST /transactions/sync/ HTTP/1.1" 500 106851
+INFO 2025-08-08 18:38:14,128 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-08 18:38:16,863 Watching for file changes with StatReloader
+ERROR 2025-08-08 18:38:22,170 Internal Server Error: /transactions/sync/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 520, in sync
+    synced_count = wallet.sync_transactions()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 271, in sync_transactions
+    'timestamp': datetime.fromtimestamp(tx['time'], tz=datetime.timezone.utc),
+                                                       ^^^^^^^^^^^^^^^^^
+AttributeError: type object 'datetime.datetime' has no attribute 'timezone'. Did you mean: 'astimezone'?
+ERROR 2025-08-08 18:38:22,181 "POST /transactions/sync/ HTTP/1.1" 500 106831
+INFO 2025-08-08 18:39:00,533 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-08 18:39:03,809 Watching for file changes with StatReloader
+ERROR 2025-08-08 18:39:39,400 Internal Server Error: /transactions/sync/
+Traceback (most recent call last):
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/ndikumana/.local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/viewsets.py", line 520, in sync
+    synced_count = wallet.sync_transactions()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py", line 271, in sync_transactions
+    'timestamp': datetime.fromtimestamp(tx['time'], tz=datetime.timezone.utc),
+                 ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'datetime' has no attribute 'fromtimestamp'
+ERROR 2025-08-08 18:39:39,460 "POST /transactions/sync/ HTTP/1.1" 500 106711
+INFO 2025-08-08 18:40:08,749 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-08 18:40:13,099 Watching for file changes with StatReloader
+INFO 2025-08-08 18:40:21,139 "POST /transactions/sync/ HTTP/1.1" 200 833
+WARNING 2025-08-08 18:41:32,157 Method Not Allowed: /transactions/
+WARNING 2025-08-08 18:41:32,161 "POST /transactions/ HTTP/1.1" 405 167
+INFO 2025-08-08 18:41:40,669 "GET /transactions/ HTTP/1.1" 200 784
+INFO 2025-08-08 18:42:37,898 "POST /wallets/update_balance/ HTTP/1.1" 200 218
+INFO 2025-08-08 18:42:44,157 "POST /wallets/update_balance/ HTTP/1.1" 200 218
+INFO 2025-08-08 18:42:48,633 "POST /wallets/update_balance/ HTTP/1.1" 200 218
+INFO 2025-08-08 19:05:14,617 "POST /wallets/generate_address/ HTTP/1.1" 200 183
+INFO 2025-08-08 20:04:36,335 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/utils.py changed, reloading.
+INFO 2025-08-08 20:04:46,640 Watching for file changes with StatReloader
+INFO 2025-08-08 20:05:52,586 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/rpc_client.py changed, reloading.
+INFO 2025-08-08 20:05:55,561 Watching for file changes with StatReloader
+INFO 2025-08-08 20:06:05,630 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/rpc_client.py changed, reloading.
+INFO 2025-08-08 20:06:10,103 Watching for file changes with StatReloader
+INFO 2025-08-08 20:15:20,791 /home/ndikumana/Documents/Python/Django/mini_wallet/wallet/models.py changed, reloading.
+INFO 2025-08-08 20:15:24,488 Watching for file changes with StatReloader
+ERROR 2025-08-08 20:39:24,156 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-08 20:39:24,161 "POST /wallets/generate_address/ HTTP/1.1" 500 160
+ERROR 2025-08-08 20:47:22,034 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-08 20:47:22,038 "POST /wallets/generate_address/ HTTP/1.1" 500 160
+ERROR 2025-08-08 20:48:15,089 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-08 20:48:15,090 "POST /wallets/generate_address/ HTTP/1.1" 500 160
+ERROR 2025-08-08 20:48:46,560 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-08 20:48:46,561 "POST /wallets/generate_address/ HTTP/1.1" 500 160
+ERROR 2025-08-08 20:48:50,352 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-08 20:48:50,355 "POST /wallets/generate_address/ HTTP/1.1" 500 160
+ERROR 2025-08-08 20:48:53,454 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-08 20:48:53,456 "POST /wallets/generate_address/ HTTP/1.1" 500 160
+INFO 2025-08-08 20:52:28,960 "POST /auth/login/ HTTP/1.1" 200 1172
+ERROR 2025-08-08 20:53:02,927 Internal Server Error: /wallets/generate_address/
+ERROR 2025-08-08 20:53:02,931 "POST /wallets/generate_address/ HTTP/1.1" 500 160
+INFO 2025-08-08 20:53:10,887 "GET /transactions/ HTTP/1.1" 200 784
+WARNING 2025-08-08 20:53:37,817 Method Not Allowed: /transactions/sync/
+WARNING 2025-08-08 20:53:37,829 "GET /transactions/sync/ HTTP/1.1" 405 166
+ERROR 2025-08-08 20:53:50,388 Internal Server Error: /transactions/sync/
+ERROR 2025-08-08 20:53:50,389 "POST /transactions/sync/ HTTP/1.1" 500 162

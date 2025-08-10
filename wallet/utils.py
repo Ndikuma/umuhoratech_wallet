@@ -11,7 +11,9 @@ from rest_framework import status
 from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
-
+import qrcode
+from io import BytesIO
+import base64
 logger = logging.getLogger('wallet')
 
 
@@ -174,6 +176,21 @@ def get_wallet_stats(wallet) -> Dict[str, Any]:
         'wallet_age_days': (timezone.now() - wallet.created_at).days
     }
 
+
+def generate_bitcoin_qrcode(address: str, amount: float = None) -> str:
+    """
+    Generate a Bitcoin QR code in base64 format for display.
+    Format: bitcoin:<address>?amount=<amount>
+    """
+    uri = f"bitcoin:{address}"
+    if amount:
+        uri += f"?amount={amount}"
+
+    qr = qrcode.make(uri)
+    buffer = BytesIO()
+    qr.save(buffer, format="PNG")
+    base64_img = base64.b64encode(buffer.getvalue()).decode("utf-8")
+    return f"data:image/png;base64,{base64_img}"
 
 class BitcoinRPCError(Exception):
     """Custom exception for Bitcoin RPC errors."""

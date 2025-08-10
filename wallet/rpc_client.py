@@ -7,7 +7,7 @@ from typing import Optional, Dict, Any, List
 from decimal import Decimal
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
 from django.conf import settings
-from .utils import BitcoinRPCError
+from .utils import BitcoinRPCError, generate_bitcoin_qrcode
 
 logger = logging.getLogger('wallet')
 
@@ -140,6 +140,22 @@ class BitcoinRPCClient:
                 'amount': str(amount)
             })
             raise BitcoinRPCError(f"Failed to send transaction: {e}")
+     # Inside class BitcoinRPCClient
+
+    def generate_receive_qrcode(self, label: str = "", amount: Optional[Decimal] = None) -> Dict[str, str]:
+        """
+        Generate a new receive address and return its QR code.
+        """
+        try:
+            address = self.get_new_address(label)
+            qr = generate_bitcoin_qrcode(address, float(amount) if amount else None)
+            return {
+                "address": address,
+                "qr_code": qr
+            }
+        except Exception as e:
+            logger.error(f"Error generating receive QR code: {e}", extra={'wallet': self.wallet_name})
+            raise BitcoinRPCError(f"Failed to generate QR code: {e}")
 
     def list_transactions(self, count: int = 20, skip: int = 0) -> List[Dict[str, Any]]:
         try:

@@ -1,17 +1,14 @@
-import importlib.machinery
-import importlib.util
-import os
 import sys
+import os
 
+project_home = '/home/btcshulevgfhnehg/repositories/umuhoratech_wallet'
+sys.path.insert(0, project_home)
 
-sys.path.insert(0, os.path.dirname(__file__))
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mini_wallet.settings'
 
-def load_source(modname, filename):
-    loader = importlib.machinery.SourceFileLoader(modname, filename)
-    spec = importlib.util.spec_from_file_location(modname, filename, loader=loader)
-    module = importlib.util.module_from_spec(spec)
-    loader.exec_module(module)
-    return module
+activate_env = '/home/btcshulevgfhnehg/virtualenv/repositories/umuhoratech_wallet/3.12/bin/activate_this.py'
+with open(activate_env) as f:
+    exec(f.read(), dict(__file__=activate_env))
 
-wsgi = load_source('wsgi', 'passenger_wsgi.py')
-application = wsgi.application
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()

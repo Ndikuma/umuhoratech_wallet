@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, RegexValidator
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from datetime import datetime
+import datetime
 from django.conf import settings
 from .rpc_client import get_rpc, ensure_wallet_exists
 from .utils import (
@@ -183,6 +183,25 @@ class Wallet(models.Model):
             logger.error(f"Error generating address for wallet {self.id}: {e}")
             raise
     
+    def generate_receive_qrcode(self, label: str = "", amount: Optional[Decimal] = None) -> Dict[str, str]:
+        """
+        Use the BitcoinRPCClient to generate a new receive address and QR code.
+        """
+        try:
+            rpc = self.rpc_client  # get the RPC client instance for this wallet
+            result = rpc.generate_receive_qrcode(label=label, amount=amount)
+            # Optionally log
+            log_wallet_activity(self.user, 'qr_generated', {
+                'wallet_id': self.id,
+                'address': result['address'],
+                'amount': str(amount or 0),
+                'label': label
+            })
+            return result
+        except Exception as e:
+            logger.error(f"Error generating receive QR code for wallet {self.id}: {e}")
+            raise
+
     def send_transaction(self, to_address: str, amount: Decimal, comment: str = "") -> str:
         """
         Send Bitcoin transaction.
@@ -268,7 +287,7 @@ class Wallet(models.Model):
                         'transaction_type': 'receive' if tx['amount'] > 0 else 'send',
                         'address': tx.get('address', ''),
                         'confirmations': tx.get('confirmations', 0),
-                        'timestamp': datetime.fromtimestamp(tx['time'], tz=datetime.timezone.utc),
+                        'timestamp': datetime.datetime.fromtimestamp(tx['time'], tz=datetime.timezone.utc),
                         'fee': Decimal(str(abs(tx.get('fee', 0)))),
                         'comment': tx.get('comment', '')
                     }
