@@ -119,14 +119,14 @@ class AuthViewSet(viewsets.GenericViewSet):
             )
         
         token, _ = Token.objects.get_or_create(user=user)
-        wallet, _ = Wallet.objects.get_or_create(user=user)
+        # wallet, _ = Wallet.objects.get_or_create(user=user)
         
         log_wallet_activity(user, 'user_login')
         
         return Response(
             create_success_response({
                 'user': UserSerializer(user).data,
-                'wallet': WalletSerializer(wallet).data,
+                # 'wallet': WalletSerializer(wallet).data,
                 'token': token.key
             }, "Login successful"),
             status=status.HTTP_200_OK
