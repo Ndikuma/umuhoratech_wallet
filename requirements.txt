@@ -13,7 +13,7 @@ django-cors-headers==4.3.1
 python-bitcoinrpc==1.0
 bitcoinlib==0.6.15
 qrcode==7.4.2
-Pillow==10.3.0
+Pillow
 
 # Environment variables
 python-decouple==3.8
