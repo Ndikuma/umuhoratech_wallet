@@ -24,7 +24,7 @@ urlpatterns = [
     path('auth/login/', AuthViewSet.as_view({'post': 'login'}), name='auth-login'),
     path('auth/logout/', AuthViewSet.as_view({'post': 'logout'}), name='auth-logout'),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('docs/', SpectacularSwaggerView.as_view(url_name='wallet:schema'), name='swagger-ui'),
-    path('redoc/', SpectacularRedocView.as_view(url_name='wallet:schema'), name='redoc'),
+    path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
 ]
