@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BTC/USD Price</title>
+</head>
+<body>
+    <h1>Crypto Price Checker</h1>
+
+    <label for="crypto">Crypto ID:</label>
+    <input type="text" id="crypto" value="bitcoin">
+    <label for="currency">Currency:</label>
+    <input type="text" id="currency" value="usd">
+    <button onclick="getPrice()">Get Price</button>
+
+    <pre id="result"></pre>
+
+    <script>
+        async function getPrice() {
+            const crypto = document.getElementById('crypto').value;
+            const currency = document.getElementById('currency').value;
+
+            // Build query parameters
+            const params = new URLSearchParams({
+                ids: crypto,
+                vs_currencies: currency,
+                include_market_cap: 'true',
+                include_24hr_vol: 'true',
+                include_24hr_change: 'true'
+            });
+
+            const url = `https://api.coingecko.com/api/v3/simple/price?${params.toString()}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById('result').textContent = "Error: " + err;
+            }
+        }
+    </script>
+</body>
+</html>
