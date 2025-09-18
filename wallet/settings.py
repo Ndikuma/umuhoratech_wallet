@@ -103,6 +103,8 @@ ROOT_URLCONF = "wallet.urls"
 # CORS Settings
 CORS_ALLOWED_ORIGINS = [
     "https://6000-firebase-studio-1757614190106.cluster-cbeiita7rbe7iuwhvjs5zww2i4.cloudworkstations.dev",
+    "https://umuhoratech-wallet.onrender.com/",
+    "http://localhost:3000",
 ]
 
 # Allow sending cookies/auth headers
