@@ -119,14 +119,13 @@ class AuthViewSet(viewsets.GenericViewSet):
             )
         
         token, _ = Token.objects.get_or_create(user=user)
-        # wallet, _ = Wallet.objects.get_or_create(user=user)
+   
         
         log_wallet_activity(user, 'user_login')
         
         return Response(
             create_success_response({
                 'user': UserSerializer(user).data,
-                # 'wallet': WalletSerializer(wallet).data,
                 'token': token.key
             }, "Login successful"),
             status=status.HTTP_200_OK
@@ -313,7 +312,54 @@ class WalletViewSet(viewsets.ModelViewSet):
                 create_error_response("Failed to generate mnemonic phrase"),
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+    @extend_schema(
+        operation_id='wallet_verify_mnemonic',
+        summary='Verify mnemonic phrase',
+        description='Verify the BIP39 mnemonic phrase provided by user by checking specific words.',
+        request=VerifyMnemonicSerializer,  # serializer for verifying
+        responses={200: VerifyMnemonicSerializer}
+    )
+    @action(
+        detail=False,
+        methods=['post'],
+        permission_classes=[permissions.IsAuthenticated, IsActiveUser]
+    )
+ 
+    def verify_mnemonic(self, request: Request) -> Response:
+        """
+        Verify the correctness of specific words in a mnemonic phrase.
+        Expects 'mnemonic' (full phrase) and 'words_to_verify' (dict of index: word)
+        """
+        serializer = VerifyMnemonicSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                create_error_response("Invalid input", serializer.errors),
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
+        data = serializer.validated_data
+        mnemonic_phrase = data["mnemonic"].strip().split()
+        words_to_verify = data["words_to_verify"]
+
+        # Check if provided words match the mnemonic
+        errors = {}
+        for index_str, word in words_to_verify.items():
+            index = int(index_str)
+            if index >= len(mnemonic_phrase) or mnemonic_phrase[index] != word:
+                errors[index_str] = f"Expected '{mnemonic_phrase[index]}' but got '{word}'"
+
+        if errors:
+            return Response(
+                create_error_response("Mnemonic verification failed", errors),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        log_wallet_activity(request.user, "mnemonic_verified", {"verified_words": list(words_to_verify.keys())})
+        return Response(
+            create_success_response(True, "Mnemonic verified successfully"),
+            status=status.HTTP_200_OK
+        )
+        
     @extend_schema(
         operation_id='wallet_restore',
         summary='Restore wallet',

@@ -598,7 +598,7 @@ class BitcoinService:
 
     
     def list_transactions(self):
-        """List all wallet transactions with mapping compatible with sync_transactions, using received/sent amounts for value_btc"""
+        """List all wallet transactions with accurate sent/received amounts"""
         if not self.wallet:
             raise BitcoinRPCError("No wallet loaded")
 
@@ -609,44 +609,32 @@ class BitcoinService:
         for tx in txs:
             tx_dict = tx.as_dict()
 
-            # Determine if it's a send transaction
-            is_send = any(inp["address"] in self.wallet.addresslist() for inp in tx_dict.get("inputs", []))
+            # Determine if any input is ours (send) or all outputs are ours (receive)
+            input_addresses = [inp["address"] for inp in tx_dict.get("inputs", [])]
+            output_addresses = [out["address"] for out in tx_dict.get("outputs", [])]
+
+            is_send = any(addr in wallet_addresses for addr in input_addresses)
             direction = "send" if is_send else "receive"
 
-            # Input/output addresses
-            input_address = next((inp["address"] for inp in tx_dict.get("inputs", [])), "")
-            output_address = next((out["address"] for out in tx_dict.get("outputs", [])), "")
+            # Calculate amounts
+            total_input_sats = sum(inp["value"] for inp in tx_dict.get("inputs", []) if inp["address"] in wallet_addresses)
+            total_output_sats = sum(out["value"] for out in tx_dict.get("outputs", []) if out["address"] in wallet_addresses)
+
+            # Net BTC for this wallet
+            value_btc = -to_btc(total_input_sats - total_output_sats) if is_send else to_btc(total_output_sats)
 
             # Transaction status
-            confirmed = tx_dict.get("confirmations", 0) > 0
-            status = {"confirmed": confirmed, "confirmations": tx_dict.get("confirmations", 0)}
-
-            # Amount received (outputs to our wallet)
-            amount_received_sats = sum(
-                out["value"] for out in tx_dict.get("outputs", []) if out["address"] in wallet_addresses
-            )
-            amount_received_btc = to_btc(amount_received_sats)
-
-            # Amount sent (inputs from our wallet minus change back)
-            total_sent_sats = sum(
-                inp["value"] for inp in tx_dict.get("inputs", []) if inp["address"] in wallet_addresses
-            )
-            change_sats = sum(
-                out["value"] for out in tx_dict.get("outputs", []) if out["address"] in wallet_addresses
-            )
-            amount_sent_btc = to_btc(total_sent_sats - change_sats if total_sent_sats > change_sats else 0)
-
-            # Use net amount for value_btc
-            value_btc = amount_received_btc if not is_send else -amount_sent_btc
+            confirmations = tx_dict.get("confirmations", 0)
+            status = {"confirmed": confirmations > 0, "confirmations": confirmations}
 
             transactions.append({
                 "txid": tx_dict.get("txid"),
                 "direction": direction,
-                "value_btc": value_btc,  # Net value for your wallet
+                "value_btc": value_btc,
                 "fee_btc": float(to_btc(tx_dict.get("fee", 0))),
                 "service_fee": 0.0,
-                "input_address": input_address,
-                "output_address": output_address,
+                "input_addresses": input_addresses,
+                "output_addresses": output_addresses,
                 "status": status,
                 "raw_hex": tx_dict.get("raw"),
                 "size": tx_dict.get("size", 0),
@@ -654,11 +642,7 @@ class BitcoinService:
                 "comment": tx_dict.get("comment", "")
             })
 
-        return {
-            "transactions": transactions,
-            "total_count": len(transactions)
-        }
-
+        return {"transactions": transactions, "total_count": len(transactions)}
 
 
    

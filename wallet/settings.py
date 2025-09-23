@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from decimal import Decimal
-
+from bitcoinlib import config
+import bitcoinlib.db as m
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -103,7 +104,7 @@ ROOT_URLCONF = "wallet.urls"
 # CORS Settings
 CORS_ALLOWED_ORIGINS = [
     "https://6000-firebase-studio-1757614190106.cluster-cbeiita7rbe7iuwhvjs5zww2i4.cloudworkstations.dev",
-    "https://umuhoratech-wallet.onrender.com/",
+    "https://umuhoratech-wallet.onrender.com",
     "http://localhost:3000",
 ]
 
@@ -196,4 +197,6 @@ WALLET_SETTINGS = {
 }
 
 FEE_ADDRESS = 'your_bitcoin_fee_address_here'  # Replace with actual Bitcoin address
-
+from django.conf import settings
+BITCOINLIB_DB = BASE_DIR / "bitcoinlib.db"
+db = m.Db(str(settings.BITCOINLIB_DB))

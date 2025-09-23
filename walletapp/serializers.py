@@ -156,35 +156,36 @@ class WalletBalanceSerializer(serializers.ModelSerializer):
         ]
 
     def get_btc_value(self, obj):
-        return obj.balance
+        return f"{obj.balance:.8f} BTC"
 
     def get_sats_value(self, obj):
-        return int(obj.balance * 100_000_000)
+        sats = int(obj.balance * 100_000_000)
+        return f"{sats} sats"
 
     def get_usd_value(self, obj):
         try:
             url = f"https://api.yadio.io/convert/{obj.balance}/BTC/USD"
             response = requests.get(url)
             data = response.json()
-            return round(data.get('result', 0), 2)
+            usd = round(data.get('result', 0), 2)
+            return f"${usd} USD"
         except Exception:
             return None
 
     def get_bif_value(self, obj):
         try:
-            # First convert BTC -> USD
+            # Convert BTC -> USD
             url_usd = f"https://api.yadio.io/convert/{obj.balance}/BTC/USD"
-            usd_response = requests.get(url_usd).json()
-            usd_amount = usd_response.get('result', 0)
+            usd_amount = requests.get(url_usd).json().get('result', 0)
 
-            # Then convert USD -> BIF
+            # Convert USD -> BIF
             url_bif = f"https://api.yadio.io/convert/{usd_amount}/USD/BIF"
-            bif_response = requests.get(url_bif).json()
-            bif_amount = bif_response.get('result', 0)
+            bif_amount = requests.get(url_bif).json().get('result', 0)
 
-            return round(bif_amount, 2)
+            return f"{round(bif_amount, 2)} BIF"
         except Exception:
             return None
+
 
 class TransactionSerializer(serializers.ModelSerializer):
     """Comprehensive transaction serializer."""
@@ -550,3 +551,33 @@ class RestoreWalletSerializer(serializers.Serializer):
             'network': wallet.network,
             'restored': True
         }
+        
+
+class WordVerifySerializer(serializers.Serializer):
+    position = serializers.IntegerField(
+        min_value=1, 
+        help_text="The 1-based position of the word in the mnemonic"
+    )
+    word = serializers.CharField(
+        max_length=20, 
+        help_text="The word at the specified position to verify"
+    )
+
+class VerifyMnemonicSerializer(serializers.Serializer):
+    mnemonic = serializers.CharField(
+        max_length=255,
+        help_text="The full mnemonic phrase"
+    )
+    words_to_verify = serializers.DictField(
+        child=serializers.CharField(max_length=20),
+        help_text="Dictionary mapping positions (0-based) to the word to verify"
+    )
+
+    def validate_words_to_verify(self, value):
+        if len(value) != 4:
+            raise serializers.ValidationError("Exactly 4 words must be provided for verification")
+        # Ensure keys are integers
+        for k in value.keys():
+            if not k.isdigit():
+                raise serializers.ValidationError("All keys in words_to_verify must be numeric indices")
+        return value
