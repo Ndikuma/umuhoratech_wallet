@@ -5,7 +5,7 @@ import base64
 import requests
 import qrcode
 from bitcoinlib.keys import HDKey
-from bitcoinlib.wallets import Wallet, wallet_exists, WalletError
+from bitcoinlib.wallets import Wallet, wallet_exists,wallet_create_or_open, WalletError
 from bitcoinlib.services.services import Service, ServiceError
 from bitcoinlib.transactions import Transaction
 from bitcoinlib.mnemonic import Mnemonic
@@ -30,62 +30,6 @@ def to_btc(satoshis):
     return Decimal(satoshis) / Decimal(1e8)
 
 
-def api_response(success=True, data=None, message="", status_code=200):
-    """Standard API response format"""
-    return {
-        "success": success,
-        "data": data or {},
-        "message": message,
-        "status_code": status_code
-    }
-
-
-def handle_errors(func):
-    """Decorator to handle errors and return consistent API responses"""
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        try:
-            result = func(*args, **kwargs)
-            # If function returns a response already formatted, use it
-            if isinstance(result, dict) and 'success' in result:
-                return result
-            return api_response(success=True, data=result, message="Operation successful")
-        except BitcoinRPCError as e:
-            logger.error(f"BitcoinRPCError in {func.__name__}: {e}")
-            return api_response(
-                success=False, 
-                message=str(e), 
-                status_code=400
-            )
-        except ValueError as e:
-            logger.error(f"ValueError in {func.__name__}: {e}")
-            return api_response(
-                success=False, 
-                message=str(e), 
-                status_code=400
-            )
-        except WalletError as e:
-            logger.error(f"WalletError in {func.__name__}: {e}")
-            return api_response(
-                success=False, 
-                message=f"Wallet operation failed: {e}", 
-                status_code=500
-            )
-        except ServiceError as e:
-            logger.error(f"ServiceError in {func.__name__}: {e}")
-            return api_response(
-                success=False, 
-                message=f"Network error: {e}", 
-                status_code=503
-            )
-        except Exception as e:
-            logger.error(f"Unexpected error in {func.__name__}: {e}")
-            return api_response(
-                success=False, 
-                message="Internal server error", 
-                status_code=500
-            )
-    return wrapper
 
 
 def get_btc_usd_price():
@@ -230,54 +174,27 @@ class BitcoinService:
         if wallet_name and wallet_exists(wallet_name):
             try:
                 self.wallet = Wallet(wallet_name)
+                self.wallet.scan()  # Ensure wallet is up to date
                 logger.info(f"Wallet '{wallet_name}' loaded successfully")
             except Exception as e:
                 logger.error(f"Error loading wallet: {e}")
 
    
-    def create_wallet(self, wallet_name, mnemonic=None, passphrase=""):
-        """Create a new wallet"""
-        if wallet_exists(wallet_name):
-            self.wallet = Wallet(wallet_name)
-            return {"wallet_name": wallet_name, "message": "Wallet already exists"}
+    def create_wallet(self, wallet_name, mnemonic=None):
+        self.wallet = wallet_create_or_open(wallet_name, keys=mnemonic, network=self.network)
+        logger.info(f"Wallet {wallet_name} loaded or created.")
+        return {"wallet_name": wallet_name, "address": self.wallet.get_key().address}
 
-        try:
-            self.wallet = Wallet.create(
-                wallet_name, 
-                keys=mnemonic, 
-                passphrase=passphrase,
-                network=self.network
-            )
-            logger.info(f"Wallet {wallet_name} created.")
-            return {
-                "wallet_name": wallet_name,
-                "address": self.wallet.get_key().address,
-                "message": "Wallet created successfully"
-            }
-        except WalletError as e:
-            raise BitcoinRPCError(f"Error creating wallet: {e}")
+    def restore_wallet(self, wallet_name, keys):
+        self.wallet = wallet_create_or_open(wallet_name, keys=keys, network=self.network)
+        logger.info(f"Wallet {wallet_name} restored or loaded.")
+        return {"wallet_name": wallet_name, "address": self.wallet.get_key().address}
 
-   
-    def restore_wallet(self, wallet_name, keys, passphrase=""):
-        """Restore wallet from mnemonic or private key"""
-        if wallet_exists(wallet_name):
-            raise BitcoinRPCError(f"Wallet '{wallet_name}' already exists")
-
-        try:
-            self.wallet = Wallet.create(
-                wallet_name, 
-                keys=keys, 
-                passphrase=passphrase,
-                network=self.network
-            )
-            logger.info(f"Wallet {wallet_name} restored.")
-            return {
-                "wallet_name": wallet_name,
-                "address": self.wallet.get_key().address,
-                "message": "Wallet restored successfully"
-            }
-        except WalletError as e:
-            raise BitcoinRPCError(f"Error restoring wallet: {e}")
+    def backup_wallet(self):
+        if not self.wallet:
+            raise RuntimeError("No wallet loaded")
+        key = self.wallet.wif()
+        return {"wif": key}
 
    
     def get_balance(self, include_usd=True):

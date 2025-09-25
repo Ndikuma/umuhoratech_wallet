@@ -221,7 +221,7 @@ class UserViewSet(viewsets.ModelViewSet):
             create_success_response(message="Password changed successfully"),
             status=status.HTTP_200_OK
         )
-
+        
 class WalletViewSet(viewsets.ModelViewSet):
     """ViewSet for wallet operations."""
 
@@ -233,52 +233,12 @@ class WalletViewSet(viewsets.ModelViewSet):
         """Return only the current user's wallet."""
         return Wallet.objects.filter(user=self.request.user)
 
-    def get_object(self):
-        """Get or create the current user's wallet."""
-        wallet, _ = Wallet.objects.get_or_create(user=self.request.user)
-        return wallet
-
-    def create(self, request: Request, *args, **kwargs) -> Response:
-        """Create a new Bitcoin wallet."""
-        serializer = CreateWalletSerializer(data=request.data, context={'request': request})
-
-        if not serializer.is_valid():
-            return Response(
-                create_error_response("Wallet creation failed", serializer.errors),
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
+    def get_wallet(self):
+        """Fetch the user's wallet or raise error if none exists."""
         try:
-            with transaction.atomic():
-                result = serializer.save()
-                wallet = result['wallet']
-
-                log_wallet_activity(request.user, 'wallet_created', {
-                    'wallet_name': wallet.wallet_name,
-                    'mnemonic_provided': not result.get('mnemonic', '').strip(),
-                    'network': wallet.network
-                })
-
-                response_data = WalletSerializer(wallet).data
-                response_data['mnemonic'] = result['mnemonic']
-
-                return Response(
-                    create_success_response(response_data, "Wallet created successfully"),
-                    status=status.HTTP_201_CREATED
-                )
-
-        except BitcoinRPCError as e:
-            logger.error(f"Wallet creation error: {e}")
-            return Response(
-                create_error_response(f"Failed to create wallet: {str(e)}"),
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logger.error(f"Unexpected wallet creation error: {e}")
-            return Response(
-                create_error_response("Failed to create wallet. Please try again."),
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return Wallet.objects.get(user=self.request.user)
+        except Wallet.DoesNotExist:
+            raise NotFound(detail="Wallet not found for this user.")
 
     @extend_schema(
         operation_id='wallet_generate_mnemonic',
@@ -288,8 +248,7 @@ class WalletViewSet(viewsets.ModelViewSet):
         responses={200: GenerateMnemonicSerializer}
     )
     @action(detail=False, methods=['post'], permission_classes=[permissions.IsAuthenticated, IsActiveUser])
-    def generate_mnemonic(self, request: Request) -> Response:
-        """Generate a mnemonic phrase for wallet creation."""
+    def generate_mnemonic(self, request):
         serializer = GenerateMnemonicSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
@@ -312,24 +271,51 @@ class WalletViewSet(viewsets.ModelViewSet):
                 create_error_response("Failed to generate mnemonic phrase"),
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+    @extend_schema(
+        operation_id="wallet_create",
+        summary="Create a new wallet",
+        description="Create a wallet for the authenticated user. If no mnemonic is provided, one will be generated.",
+        responses={201: dict}
+    )
+    @action(detail=False, methods=["post"])
+    def create_wallet(self, request):
+        user = request.user
+        mnemonic = request.data.get("mnemonic")
+        network = request.data.get("network", "testnet")
+
+        try:
+            wallet, mnemonic_out = Wallet.create_wallet_for_user(
+                user=user,
+                mnemonic=mnemonic,
+                network=network
+            )
+            log_wallet_activity(user, "wallet_created", {"wallet_name": wallet.wallet_name, "network": network})
+            return Response(
+                create_success_response({
+                    "wallet_name": wallet.wallet_name,
+                    "bitcoin_address": wallet.bitcoin_address,
+                    "network": wallet.network,
+                    "mnemonic": mnemonic_out
+                }, "Wallet created successfully"),
+                status=status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            logger.error(f"Wallet creation failed for {user.username}: {e}")
+            return Response(
+                create_error_response("Wallet creation failed", str(e)),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
     @extend_schema(
         operation_id='wallet_verify_mnemonic',
         summary='Verify mnemonic phrase',
         description='Verify the BIP39 mnemonic phrase provided by user by checking specific words.',
-        request=VerifyMnemonicSerializer,  # serializer for verifying
+        request=VerifyMnemonicSerializer,
         responses={200: VerifyMnemonicSerializer}
     )
-    @action(
-        detail=False,
-        methods=['post'],
-        permission_classes=[permissions.IsAuthenticated, IsActiveUser]
-    )
- 
-    def verify_mnemonic(self, request: Request) -> Response:
-        """
-        Verify the correctness of specific words in a mnemonic phrase.
-        Expects 'mnemonic' (full phrase) and 'words_to_verify' (dict of index: word)
-        """
+    @action(detail=False, methods=['post'], permission_classes=[permissions.IsAuthenticated, IsActiveUser])
+    def verify_mnemonic(self, request):
         serializer = VerifyMnemonicSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
@@ -341,7 +327,6 @@ class WalletViewSet(viewsets.ModelViewSet):
         mnemonic_phrase = data["mnemonic"].strip().split()
         words_to_verify = data["words_to_verify"]
 
-        # Check if provided words match the mnemonic
         errors = {}
         for index_str, word in words_to_verify.items():
             index = int(index_str)
@@ -359,61 +344,51 @@ class WalletViewSet(viewsets.ModelViewSet):
             create_success_response(True, "Mnemonic verified successfully"),
             status=status.HTTP_200_OK
         )
-        
+
     @extend_schema(
         operation_id='wallet_restore',
         summary='Restore wallet',
         description='Restore a Bitcoin wallet from mnemonic or private key',
-        request=RestoreWalletSerializer,
-        responses={201: WalletSerializer}
+        responses={201: dict}
     )
     @action(detail=False, methods=['post'], permission_classes=[permissions.IsAuthenticated, IsActiveUser])
-    def restore(self, request: Request) -> Response:
-        """Restore a Bitcoin wallet."""
-        serializer = RestoreWalletSerializer(data=request.data, context={'request': request})
-        if not serializer.is_valid():
-            return Response(
-                create_error_response("Wallet restoration failed", serializer.errors),
-                status=status.HTTP_400_BAD_REQUEST
-            )
+    def restore(self, request):
+        """
+        Restore a Bitcoin wallet for the authenticated user.
+        Expects 'wallet_name' and 'keys' in request.data.
+        """
+        keys = request.data.get("keys",'')
+        network = request.data.get("network", getattr(settings, "BITCOIN_NETWORK", "testnet"))
+
+
         try:
             with transaction.atomic():
-                result = serializer.save()
-                wallet = result['wallet']
+                wallet = Wallet.restore_wallet_for_user(
+                    user=request.user,
+                    keys=keys,
+                    network=network
+                )
                 log_wallet_activity(request.user, 'wallet_restored', {
                     'wallet_name': wallet.wallet_name,
                     'network': wallet.network
                 })
                 return Response(
-                    create_success_response(WalletSerializer(wallet).data, "Wallet restored successfully"),
+                    create_success_response({
+                        "wallet_name": wallet.wallet_name,
+                        "bitcoin_address": wallet.bitcoin_address,
+                        "network": wallet.network,
+                        "balance": str(wallet.balance)
+                    }, "Wallet restored successfully"),
                     status=status.HTTP_201_CREATED
                 )
-        except BitcoinRPCError as e:
-            logger.error(f"Wallet restoration error: {e}")
-            return Response(
-                create_error_response(f"Failed to restore wallet: {str(e)}"),
-                status=status.HTTP_400_BAD_REQUEST
-            )
         except Exception as e:
-            logger.error(f"Unexpected wallet restoration error: {e}")
+            logger.error(f"Wallet restoration error for {request.user.username}: {e}")
             return Response(
-                create_error_response("Failed to restore wallet. Please try again."),
+                create_error_response("Failed to restore wallet. Please try again.", str(e)),
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-    @extend_schema(
-        operation_id='wallet_detail',
-        summary='Get wallet details',
-        description='Get detailed wallet information including balance and statistics',
-        responses={200: WalletSerializer}
-    )
-    def retrieve(self, request: Request, *args, **kwargs) -> Response:
-        """Get wallet details."""
-        wallet = self.get_object()
-        return Response(
-            create_success_response(WalletSerializer(wallet).data, "Wallet details retrieved successfully"),
-            status=status.HTTP_200_OK
-        )
+
     @extend_schema(
         operation_id='wallet_balance',
         summary='Get wallet balance',
@@ -421,36 +396,40 @@ class WalletViewSet(viewsets.ModelViewSet):
         responses={200: WalletBalanceSerializer}
     )
     @action(detail=False, methods=['get'])
-    def balance(self, request: Request) -> Response:
-        """Get wallet balance."""
-        wallet = self.get_object()
-        wallet.update_balance()
-        return Response(
-            create_success_response(WalletBalanceSerializer(wallet).data, "Balance retrieved successfully"),
-            status=status.HTTP_200_OK
-        )
-
-    @extend_schema(
-        operation_id='wallet_update_balance',
-        summary='Update wallet balance',
-        description='Sync wallet balance with Bitcoin network',
-        responses={200: WalletBalanceSerializer}
-    )
-    @action(detail=False, methods=['post'])
-    def update_balance(self, request: Request) -> Response:
-        """Update wallet balance from Bitcoin network."""
+    def balance(self, request):
+        wallet = self.get_wallet()
         try:
-            wallet = self.get_object()
             wallet.update_balance()
-            log_wallet_activity(request.user, 'balance_updated', {'balance': str(wallet.balance)})
             return Response(
-                create_success_response(WalletBalanceSerializer(wallet).data, "Balance updated successfully"),
+                create_success_response(WalletBalanceSerializer(wallet).data, "Balance retrieved successfully"),
                 status=status.HTTP_200_OK
             )
-        except BitcoinRPCError as e:
-            logger.error(f"Balance update error: {e}")
+        except Exception as e:
+            logger.error(f"Failed to retrieve balance for {request.user.username}: {e}")
             return Response(
-                create_error_response(f"Error updating balance: {str(e)}"),
+                create_error_response("Failed to retrieve balance", str(e)),
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    @extend_schema(
+        operation_id='wallet_backup',
+        summary='Backup wallet private key',
+        description='Return wallet WIF for backup purposes',
+        responses={200: dict}
+    )
+    @action(detail=False, methods=['get'])
+    def backup(self, request):
+        wallet = self.get_wallet()
+        try:
+            wif = wallet.service.backup_wallet()  # return WIF only
+            return Response(
+                create_success_response(wif, "Wallet backup retrieved successfully"),
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            logger.error(f"Failed to backup wallet for {request.user.username}: {e}")
+            return Response(
+                create_error_response("Failed to backup wallet", str(e)),
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -462,28 +441,26 @@ class WalletViewSet(viewsets.ModelViewSet):
         responses={200: dict}
     )
     @action(detail=False, methods=['post'])
-    def generate_address(self, request: Request) -> Response:
-        """Generate a new Bitcoin address."""
+    def generate_address(self, request):
         serializer = AddressGenerationSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
                 create_error_response("Invalid input", serializer.errors),
                 status=status.HTTP_400_BAD_REQUEST
             )
-
+        wallet = self.get_wallet()
+        label = serializer.validated_data.get('label', '')
         try:
-            wallet = self.get_object()
-            label = serializer.validated_data.get('label', '')
             address = wallet.generate_new_address(label)
             log_wallet_activity(request.user, 'address_generated', {'address': address})
             return Response(
                 create_success_response({'address': address, 'label': label}, "Address generated successfully"),
                 status=status.HTTP_200_OK
             )
-        except BitcoinRPCError as e:
+        except Exception as e:
             logger.error(f"Address generation error: {e}")
             return Response(
-                create_error_response(f"Error generating address: {str(e)}"),
+                create_error_response("Failed to generate address", str(e)),
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -495,17 +472,15 @@ class WalletViewSet(viewsets.ModelViewSet):
         responses={200: dict}
     )
     @action(detail=False, methods=['post'])
-    def generate_qr_code(self, request: Request) -> Response:
-        """Generate a QR code for receiving payments."""
+    def generate_qr_code(self, request):
         serializer = AddressGenerationSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
                 create_error_response("Invalid input", serializer.errors),
                 status=status.HTTP_400_BAD_REQUEST
             )
-
+        wallet = self.get_wallet()
         try:
-            wallet = self.get_object()
             qr_data = wallet.service.generate_receive_qrcode(
                 amount=request.data.get('amount'),
                 address=wallet.bitcoin_address
@@ -515,28 +490,14 @@ class WalletViewSet(viewsets.ModelViewSet):
                 create_success_response(qr_data, "QR code generated successfully"),
                 status=status.HTTP_200_OK
             )
-        except BitcoinRPCError as e:
+        except Exception as e:
             logger.error(f"QR code generation error: {e}")
             return Response(
-                create_error_response(f"Error generating QR code: {str(e)}"),
+                create_error_response("Failed to generate QR code", str(e)),
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-    @extend_schema(
-        operation_id='wallet_stats',
-        summary='Get wallet statistics',
-        description='Get comprehensive wallet statistics',
-        responses={200: WalletStatsSerializer}
-    )
-    @action(detail=False, methods=['get'])
-    def stats(self, request: Request) -> Response:
-        """Get wallet statistics."""
-        wallet = self.get_object()
-        stats = wallet.get_stats()
-        return Response(
-            create_success_response(stats, "Statistics retrieved successfully"),
-            status=status.HTTP_200_OK
-        )
+
 
 class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for transaction operations."""

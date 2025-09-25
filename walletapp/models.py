@@ -4,6 +4,8 @@ from decimal import Decimal
 from .bitcoin_service import BitcoinService
 import logging
 from django.utils import timezone
+from bitcoinlib.wallets import wallet_exists
+import time
 logger = logging.getLogger(__name__)
 
 class Wallet(models.Model):
@@ -19,6 +21,7 @@ class Wallet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
     class Meta:
         ordering = ["-created_at"]
 
@@ -33,14 +36,20 @@ class Wallet(models.Model):
             raise ValueError("FEE_ADDRESS is not configured in settings")
         return BitcoinService(wallet_name=self.wallet_name, fee_address=fee_address, network=self.network)
 
+
     @classmethod
-    def create_wallet_for_user(cls, user, wallet_name=None, mnemonic=None, passphrase="", network="testnet"):
-        """Create a wallet for a user using BitcoinService"""
-        if not wallet_name:
-            wallet_name = f"{user.username}_wallet_{int(time.time())}"
+    def create_wallet_for_user(cls, user, mnemonic=None, network="testnet"):
+        """Create a wallet for a user using BitcoinService and sync with bitcoinlib"""
+    
+        wallet_name = f"{user.username}_wallet_{int(time.time())}"
+
+        # ✅ Check if wallet already exists in bitcoinlib
+        if wallet_exists(wallet_name):
+            raise ValueError(f"Wallet '{wallet_name}' already exists in bitcoinlib")
+
         try:
             btc_service = BitcoinService(network=network, fee_address=settings.FEE_ADDRESS)
-            wallet_data = btc_service.create_wallet(wallet_name, mnemonic=mnemonic, passphrase=passphrase)
+            wallet_data = btc_service.create_wallet(wallet_name, mnemonic=mnemonic)
             wallet = cls.objects.create(
                 user=user,
                 wallet_name=wallet_name,
@@ -54,11 +63,28 @@ class Wallet(models.Model):
             raise
 
     @classmethod
-    def restore_wallet_for_user(cls, user, wallet_name, keys, passphrase="", network="testnet"):
-        """Restore a wallet for a user using BitcoinService"""
+    def restore_wallet_for_user(cls, user, keys, network="testnet"):
+        """
+        Restore a wallet for a user using BitcoinService and sync with bitcoinlib.
+        Uses the existing wallet name for the user or generates one if needed.
+        """
         try:
             btc_service = BitcoinService(network=network, fee_address=settings.FEE_ADDRESS)
-            wallet_data = btc_service.restore_wallet(wallet_name, keys, passphrase)
+
+            # Get the wallet name from existing wallet object if it exists
+            wallet_obj = cls.objects.filter(user=user).first()
+            if wallet_obj:
+                wallet_name = wallet_obj.wallet_name
+            else:
+                # Generate a wallet name if user has no wallet yet
+                wallet_name = f"{user.username}_wallet_{int(time.time())}"
+
+            # Open existing wallet in bitcoinlib or restore if it doesn't exist
+            if wallet_exists(wallet_name):
+                wallet_data = btc_service.create_wallet(wallet_name)  # open existing
+            else:
+                wallet_data = btc_service.restore_wallet(wallet_name, keys)
+
             wallet, created = cls.objects.get_or_create(
                 user=user,
                 wallet_name=wallet_name,
@@ -67,12 +93,15 @@ class Wallet(models.Model):
                     "network": network
                 }
             )
+
             if not created:
                 wallet.bitcoin_address = wallet_data["address"]
                 wallet.network = network
                 wallet.save()
+
             logger.info(f"Wallet restored for user {user.username}: {wallet_name}")
             return wallet
+
         except Exception as e:
             logger.error(f"Failed to restore wallet for user {user.username}: {e}")
             raise
@@ -120,7 +149,6 @@ class Wallet(models.Model):
                 explorer_url=tx_data.get("explorer_url"),
                 comment=comment
             )
-            self.update_balance()
             logger.info(f"Transaction sent from wallet {self.wallet_name}: {tx.txid}")
             return tx.txid
         except Exception as e:

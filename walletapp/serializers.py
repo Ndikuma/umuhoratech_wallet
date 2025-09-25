@@ -397,95 +397,13 @@ class CreateWalletSerializer(serializers.Serializer):
         max_length=100,
         help_text="Optional passphrase for wallet encryption"
     )
-    generate_mnemonic = serializers.BooleanField(
-        default=True,
-        help_text="Generate a new mnemonic phrase (True) or use provided one (False)"
-    )
     mnemonic = serializers.CharField(
         required=False,
         allow_blank=True,
         max_length=500,
         help_text="Optional mnemonic phrase (12 or 24 words) if generate_mnemonic=False"
     )
-    words = serializers.ChoiceField(
-        choices=[12, 24],
-        default=12,
-        help_text="Number of words for mnemonic (12 or 24)"
-    )
-    language = serializers.CharField(
-        default="english",
-        max_length=20,
-        help_text="Mnemonic language (e.g., 'english')"
-    )
-    network = serializers.ChoiceField(
-        choices=["mainnet", "testnet"],
-        default="testnet",
-        help_text="Bitcoin network (mainnet or testnet)"
-    )
 
-    def validate_wallet_name(self, value):
-        """Validate wallet name uniqueness."""
-        if value and Wallet.objects.filter(wallet_name=value).exists():
-            raise serializers.ValidationError("Wallet name already exists")
-        if value and not value.replace('_', '').replace('-', '').isalnum():
-            raise serializers.ValidationError(
-                "Wallet name can only contain letters, numbers, hyphens, and underscores"
-            )
-        return value.lower() if value else value
-
-    def validate_mnemonic(self, value):
-        """Validate mnemonic if provided."""
-        if value and not validate_mnemonic(value):
-            raise serializers.ValidationError("Invalid mnemonic phrase")
-        return value
-
-    def validate(self, attrs):
-        """Cross-field validation."""
-        generate_mnemonic = attrs.get('generate_mnemonic', True)
-        mnemonic = attrs.get('mnemonic', '')
-
-        if generate_mnemonic and mnemonic:
-            raise serializers.ValidationError({
-                'mnemonic': "Cannot provide mnemonic when generate_mnemonic=True"
-            })
-
-        if not generate_mnemonic and not mnemonic.strip():
-            raise serializers.ValidationError({
-                'mnemonic': "Mnemonic is required when generate_mnemonic=False"
-            })
-
-        return attrs
-
-    def create(self, validated_data):
-        """Create a new wallet using BitcoinService."""
-        user = self.context['request'].user
-        wallet_name = validated_data.get('wallet_name')
-        passphrase = validated_data.get('passphrase', '')
-        generate_mnemonic = validated_data['generate_mnemonic']
-        mnemonic = validated_data.get('mnemonic', '')
-        words = validated_data['words']
-        language = validated_data['language']
-        network = validated_data['network']
-
-        if generate_mnemonic:
-            mnemonic_data = BitcoinService.generate_mnemonic(words=words, language=language)
-            mnemonic = mnemonic_data['mnemonic']
-
-        wallet, mnemonic = Wallet.create_wallet_for_user(
-            user=user,
-            wallet_name=wallet_name,
-            mnemonic=mnemonic if not generate_mnemonic else None,
-            passphrase=passphrase,
-            network=network
-        )
-
-        return {
-            'wallet': wallet,
-            'mnemonic': mnemonic,
-            'address': wallet.bitcoin_address,
-            'wallet_name': wallet.wallet_name,
-            'network': wallet.network
-        }
 
 class RestoreWalletSerializer(serializers.Serializer):
     """Serializer for restoring a Bitcoin wallet from mnemonic or private key."""
@@ -504,29 +422,6 @@ class RestoreWalletSerializer(serializers.Serializer):
         max_length=100,
         help_text="Optional passphrase used during wallet creation"
     )
-    network = serializers.ChoiceField(
-        choices=["mainnet", "testnet"],
-        default="testnet",
-        help_text="Bitcoin network (mainnet or testnet)"
-    )
-
-    def validate_wallet_name(self, value):
-        """Validate wallet name uniqueness."""
-        if Wallet.objects.filter(wallet_name=value).exists():
-            raise serializers.ValidationError("Wallet name already exists")
-        if not value.replace('_', '').replace('-', '').isalnum():
-            raise serializers.ValidationError(
-                "Wallet name can only contain letters, numbers, hyphens, and underscores"
-            )
-        return value.lower()
-
-    def validate_keys(self, value):
-        """Validate keys (mnemonic or private key)."""
-        if not validate_mnemonic(value) and not validate_private_key(value):
-            raise serializers.ValidationError(
-                "Invalid keys: Must be a valid BIP39 mnemonic or WIF private key"
-            )
-        return value
 
     def create(self, validated_data):
         """Restore wallet using BitcoinService."""
@@ -534,14 +429,12 @@ class RestoreWalletSerializer(serializers.Serializer):
         wallet_name = validated_data['wallet_name']
         keys = validated_data['keys']
         passphrase = validated_data['passphrase']
-        network = validated_data['network']
 
         wallet = Wallet.restore_wallet_for_user(
             user=user,
             wallet_name=wallet_name,
             keys=keys,
             passphrase=passphrase,
-            network=network
         )
 
         return {
@@ -551,7 +444,7 @@ class RestoreWalletSerializer(serializers.Serializer):
             'network': wallet.network,
             'restored': True
         }
-        
+
 
 class WordVerifySerializer(serializers.Serializer):
     position = serializers.IntegerField(
