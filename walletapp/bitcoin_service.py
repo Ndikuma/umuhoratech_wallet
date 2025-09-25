@@ -12,6 +12,7 @@ from bitcoinlib.mnemonic import Mnemonic
 from bitcoinlib.keys import Key
 from bitcoinlib.encoding import to_hexstring
 from functools import wraps
+from django.conf  import settings
 import json
 import time
 
@@ -171,9 +172,9 @@ class BitcoinService:
         self.network = network
         self.tracker = TransactionTracker(network)
 
-        if wallet_name and wallet_exists(wallet_name):
+        if wallet_name and wallet_exists(wallet_name,db_uri=str(settings.BITCOINLIB_DB)):
             try:
-                self.wallet = Wallet(wallet_name)
+                self.wallet = Wallet(wallet_name,db_uri=str(settings.BITCOINLIB_DB))
                 self.wallet.scan()  # Ensure wallet is up to date
                 logger.info(f"Wallet '{wallet_name}' loaded successfully")
             except Exception as e:
@@ -181,7 +182,7 @@ class BitcoinService:
 
    
     def create_wallet(self, wallet_name, mnemonic=None):
-        self.wallet = wallet_create_or_open(wallet_name, keys=mnemonic, network=self.network)
+        self.wallet = wallet_create_or_open(wallet_name, keys=mnemonic, network=self.network,db_uri=str(settings.BITCOINLIB_DB))
         logger.info(f"Wallet {wallet_name} loaded or created.")
         return {"wallet_name": wallet_name, "address": self.wallet.get_key().address}
 

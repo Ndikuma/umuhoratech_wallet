@@ -198,6 +198,4 @@ WALLET_SETTINGS = {
 }
 
 FEE_ADDRESS = 'your_bitcoin_fee_address_here'  # Replace with actual Bitcoin address
-from django.conf import settings
 BITCOINLIB_DB = BASE_DIR / "bitcoinlib.db"
-db = m.Db(str(settings.BITCOINLIB_DB))
