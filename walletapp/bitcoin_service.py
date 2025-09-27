@@ -176,7 +176,7 @@ class BitcoinService:
         if wallet_name and wallet_exists(wallet_name,db_uri=str(settings.BITCOINLIB_DB)):
             try:
                 self.wallet = Wallet(wallet_name,db_uri=str(settings.BITCOINLIB_DB))
-                self.wallet.scan()  # Ensure wallet is up to date
+                # self.wallet.scan()  # Ensure wallet is up to date
                 logger.info(f"Wallet '{wallet_name}' loaded successfully")
             except Exception as e:
                 logger.error(f"Error loading wallet: {e}")
@@ -203,7 +203,7 @@ class BitcoinService:
         """Get wallet balance"""
         if not self.wallet:
             raise BitcoinRPCError("No wallet loaded")
-        
+        self.wallet.scan()
         balance_sat = self.wallet.balance()
         balance_btc = to_btc(balance_sat)
 
