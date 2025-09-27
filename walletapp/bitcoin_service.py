@@ -13,6 +13,7 @@ from bitcoinlib.keys import Key
 from bitcoinlib.encoding import to_hexstring
 from functools import wraps
 from django.conf  import settings
+import threading
 import json
 import time
 
@@ -171,7 +172,7 @@ class BitcoinService:
         self.fee_address = fee_address
         self.network = network
         self.tracker = TransactionTracker(network)
-
+        # ,db_uri=str(settings.BITCOINLIB_DB)
         if wallet_name and wallet_exists(wallet_name,db_uri=str(settings.BITCOINLIB_DB)):
             try:
                 self.wallet = Wallet(wallet_name,db_uri=str(settings.BITCOINLIB_DB))
@@ -283,8 +284,40 @@ class BitcoinService:
                 "amount_btc": float(to_btc(amount)),
                 "message": "Transaction created (not broadcasted)"
             }
-    
-   
+    def estimate_sendable_amount(self, total_amount: float) -> dict:
+        """
+        Estimate the actual sendable amount after network fee.
+        total_amount: total satoshis user wants to spend
+        Returns dict with:
+            - sendable_amount: amount minus fee
+            - fee: estimated network fee
+        """
+        if not self.wallet:
+            raise Exception("No wallet loaded")
+
+
+        # Use wallet's own address for temp tx
+        to_address = self.wallet.get_key().address
+
+        # Create a temporary tx for fee estimation
+        tx = self.wallet.transaction_create(
+            [(to_address, to_satoshis(total_amount))],
+        )
+
+        fee_estimate = tx.fee
+
+        # Delete the temporary tx
+        # tx.delete()
+
+        # Calculate sendable amount after subtracting fee
+        sendable_amount = to_satoshis(total_amount) - fee_estimate
+        if sendable_amount < 0:
+            sendable_amount = 0  # cannot send negative
+
+        return {
+            "sendable_amount": to_btc(sendable_amount),
+            "fee": to_btc(fee_estimate)
+        }
     def send_with_service_fee(self, to_address, amount_btc, service_fee_percent=0.04,
                           fee_priority="halfHour", dust_limit=546, broadcast=False):
         """

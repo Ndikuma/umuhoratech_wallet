@@ -9,10 +9,33 @@ from django.conf import settings
 from decimal import Decimal
 from bitcoinlib.keys import Address, Key
 from bitcoinlib.mnemonic import Mnemonic
-
+import requests
+from decimal import Decimal
 
 
 logger = logging.getLogger(__name__)
+
+
+def convert_btc_to_usd_bif(btc_amount: Decimal) -> dict:
+    """
+    Convert BTC amount to USD and BIF using Yadio API.
+    Returns a dict: {"usd": float, "bif": float}
+    """
+    try:
+        # BTC -> USD
+        url_usd = f"https://api.yadio.io/convert/{btc_amount}/BTC/USD"
+        usd_amount = requests.get(url_usd).json().get('result', 0)
+
+        # USD -> BIF
+        url_bif = f"https://api.yadio.io/convert/{usd_amount}/USD/BIF"
+        bif_amount = requests.get(url_bif).json().get('result', 0)
+
+        return {
+            "usd": round(float(usd_amount), 2),
+            "bif": round(float(bif_amount), 2)
+        }
+    except Exception:
+        return {"usd": 0, "bif": 0}
 
 def custom_exception_handler(exc, context):
     """

@@ -497,6 +497,60 @@ class WalletViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    @action(detail=False, methods=['post'])
+    def estimate_fee(self, request):
+        """
+        Estimate network fee and sendable amount for a BTC transaction.
+        Expects:
+        - amount: amount in BTC
+        """
+        user = request.user
+        try:
+            wallet = Wallet.objects.get(user=user)
+        except Wallet.DoesNotExist:
+            return Response(
+                {"error": "Wallet not found for this user."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        amount = request.data.get("amount")
+        if not amount:
+            return Response(
+                {"error": "Amount is required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            amount = Decimal(amount)
+
+            # Estimate network fee and sendable amount
+            estimation = wallet.service.estimate_sendable_amount(amount)
+
+            sendable_btc = f"{estimation['sendable_amount']:.8f}"
+            network_fee_btc = f"{estimation['fee']:.8f}"
+
+            # Convert to USD & BIF
+            from .utils import convert_btc_to_usd_bif
+            sendable_converted = convert_btc_to_usd_bif(estimation['sendable_amount'])
+            fee_converted = convert_btc_to_usd_bif(estimation['fee'])
+
+            data = {
+                "sendable_btc": sendable_btc,
+                "network_fee_btc": network_fee_btc,
+                "sendable_usd": sendable_converted['usd'],
+                "sendable_bif": sendable_converted['bif'],
+                "network_fee_usd": fee_converted['usd'],
+                "network_fee_bif": fee_converted['bif']
+            }
+            return Response(create_success_response(data, "Fee estimation successful"))
+
+        except Exception as e:
+            logger.error(f"Fee estimation error: {e}")
+            return Response(
+                {"success": False, "error": f"Failed to estimate fees: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 
 
 class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -555,7 +609,7 @@ class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
         try:
             wallet = Wallet.objects.get(user=request.user)
             
-            address = request.data['recipient']
+            address = request.data['to_address']
             amount = request.data["amount"]
         
             transaction_obj = wallet.send_transaction(address, amount, broadcast=True)
