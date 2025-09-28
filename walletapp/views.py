@@ -594,7 +594,25 @@ class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
             ),
             status=status.HTTP_200_OK
         )
-    
+    @extend_schema(
+        operation_id="transaction_recents",
+        summary="Recent transactions",
+        description="Get the 5 most recent user transactions",
+        responses={200: TransactionSerializer(many=True)},
+    )
+    @action(detail=False, methods=["get"])
+    def recents(self, request):
+        """Get the 5 most recent user transactions"""
+        queryset = self.get_queryset()[:5]  # only last 5
+
+        serializer = TransactionSerializer(queryset, many=True)
+        return Response(
+            create_success_response(
+                serializer.data,
+                "Recent transactions retrieved successfully"
+            ),
+            status=status.HTTP_200_OK
+        )
     @extend_schema(
         operation_id='transaction_send',
         summary='Send Bitcoin transaction',
