@@ -60,6 +60,7 @@ class Order(models.Model):
     STATUS_CHOICES = [
         ("pending", "Pending"),
         ("completed", "Completed"),
+        ("awaiting_confirmation", "Awaiting Confirmation"),
         ("failed", "Failed"),
     ]
     DIRECTION_CHOICES = [
@@ -81,7 +82,7 @@ class Order(models.Model):
         help_text="Contains user account details to pay them during sell (e.g., mobile money, bank)"
     )
     payment_proof = models.JSONField(default=dict, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    status = models.CharField(max_length=200, choices=STATUS_CHOICES, default="pending")
     note = models.TextField(blank=True, null=True)
 
     btc_address = models.CharField(max_length=255, blank=True, null=True)
