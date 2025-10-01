@@ -627,8 +627,8 @@ class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
         try:
             wallet = Wallet.objects.get(user=request.user)
             
-            address = request.data['to_address']
-            amount = request.data["amount"]
+            address = request.data['address']
+            amount = Decimal(request.data["amount"])
         
             transaction_obj = wallet.send_transaction(address, amount)
             
