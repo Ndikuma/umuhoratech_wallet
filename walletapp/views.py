@@ -630,7 +630,7 @@ class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
             address = request.data['to_address']
             amount = request.data["amount"]
         
-            transaction_obj = wallet.send_transaction(address, amount, broadcast=True)
+            transaction_obj = wallet.send_transaction(address, amount)
             
             log_wallet_activity(request.user, 'transaction_sent', {
                
