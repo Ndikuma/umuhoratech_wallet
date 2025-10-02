@@ -250,7 +250,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 class SendTransactionSerializer(serializers.Serializer):
     """Serializer for sending Bitcoin transactions."""
     
-    address = serializers.CharField(
+    to_address = serializers.CharField(
         max_length=62,
         help_text="Valid Bitcoin address"
     )
