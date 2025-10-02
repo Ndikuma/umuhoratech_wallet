@@ -97,3 +97,11 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order #{self.id} by {self.user.username}"
+    def save(self, *args, **kwargs):
+        """
+        Override save() to automatically update status when payment proof is provided.
+        """
+        if self.status == "pending" and self.payment_proof:
+            self.status = "awaiting_confirmation"
+
+        super().save(*args, **kwargs)
