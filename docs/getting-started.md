@@ -8,8 +8,8 @@
 
 1) Clone and enter the project directory
 ```
-git clone <your-repo-url>.git
-cd wallet
+git clone https://github.com/Ndikuma/umuhoratech_wallet.git
+cd umuhoratech_wallet
 ```
 
 2) Create a virtual environment and activate
