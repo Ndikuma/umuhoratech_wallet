@@ -54,3 +54,4 @@ whitenoise==6.6.0
 # Utilities
 celery==5.3.6
 kombu==5.3.5
+bolt11

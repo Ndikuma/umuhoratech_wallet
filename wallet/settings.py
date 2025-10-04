@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles", 
     "walletapp",
     'orders',
+    'lightning',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
