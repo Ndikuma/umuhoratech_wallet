@@ -35,36 +35,33 @@ class WalletLocal(models.Model):
 
 class Invoice(models.Model):
     STATUS_CHOICES = [
-        ("UNPAID", "Unpaid"),
-        ("PAID", "Paid"),
-        ("CANCELLED", "Cancelled"),
-        ("EXPIRED", "Expired"),
+        ("pending", "Pending"),
+        ("paid", "Paid"),
+        ("expired", "Expired"),
     ]
 
-    wallet = models.ForeignKey(WalletLocal, on_delete=models.CASCADE, related_name="invoices")
-    payment_request = models.TextField(unique=True)  # bolt11 string
+    wallet = models.ForeignKey("WalletLocal", on_delete=models.CASCADE, related_name="invoices")
+    payment_request = models.TextField()  # bolt11 string
+    payment_hash = models.TextField(null=True,blank=True)
     amount = models.BigIntegerField(blank=True, null=True)  # sats
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="UNPAID")
+    memo = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
+    is_outgoing = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
     paid_at = models.DateTimeField(blank=True, null=True)
+    qr_code = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"Invoice {self.id} - {self.amount or '?'} sats ({self.status})"
 
     def mark_paid(self):
         """Mark invoice as paid and set paid_at timestamp"""
-        self.status = "PAID"
+        self.status = "paid"
         self.paid_at = timezone.now()
         self.save()
 
-    def mark_unpaid(self):
-        """Mark invoice as unpaid"""
-        self.status = "UNPAID"
-        self.paid_at = None
-        self.save()
-
-    def mark_cancelled(self):
-        """Mark invoice as cancelled"""
-        self.status = "CANCELLED"
-        self.paid_at = None
+    def mark_expired(self):
+        """Mark invoice as expired"""
+        self.status = "expired"
         self.save()

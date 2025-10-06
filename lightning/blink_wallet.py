@@ -326,8 +326,8 @@ class BlinkWallet:
         img.save(buffer, format="PNG")
         buffer.seek(0)
 
-        # Encode image bytes to base62-like string (using base64 as fallback)
-        encoded = base64.b62encode(buffer.read()).decode("utf-8")
-        return encoded
+        # Encode as Base64 string
+        encoded = base64.b64encode(buffer.read()).decode("utf-8")
+        return f"data:image/png;base64,{encoded}"
 
 

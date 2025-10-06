@@ -48,10 +48,12 @@ class AuthViewSet(viewsets.GenericViewSet):
 
     @action(detail=False, methods=['post'])
     def register(self, request):
+        print(request.data)
         """Register a new user (username, email, password)."""
         serializer = UserRegistrationSerializer(data=request.data)
 
         if not serializer.is_valid():
+            print(serializer.errors)
             return Response(
                 create_error_response(
                     "Registration failed",
