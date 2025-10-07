@@ -293,6 +293,22 @@ class AuthViewSet(viewsets.GenericViewSet):
         return Response(create_success_response({"message": "OTP verified successfully."}),
                         status=status.HTTP_200_OK)
 
+    @action(detail=False, methods=["post"], permission_classes=[permissions.IsAuthenticated])
+    def logout(self, request):
+        """Log out user by deleting their auth token."""
+        try:
+            # Delete the token associated with the authenticated user
+            Token.objects.filter(user=request.user).delete()
+            return Response(
+                create_success_response({"message": "Logged out successfully."}),
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                create_error_response(f"Logout failed: {str(e)}"),
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 class UserViewSet(viewsets.ModelViewSet):
     """ViewSet for user operations."""
     
