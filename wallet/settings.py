@@ -122,16 +122,25 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # Use your SMTP server or Gmail for development
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = '127.0.0.1'          # or your mail host
-EMAIL_USE_TLS = False
-EMAIL_PORT =1025
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-DEFAULT_FROM_EMAIL = 'no-reply@bwallet.bi'
+# Configuration email
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "testcomlab24@gmail.com"
+EMAIL_HOST_PASSWORD = "nyhbfgzcvhsadrpp"
+DEFAULT_FROM_EMAIL = 'support@umuhora.com'
 
 # OTP settings
 OTP_EMAIL_SENDER = DEFAULT_FROM_EMAIL
+
+OTP_TOTP_ISSUER = "Umuhora Wallet"
+
+# Sender information
+OTP_EMAIL_SENDER = "Umuhora Wallet <support@umuhora.com>"
+
+# Email subject
+OTP_EMAIL_SUBJECT = "Your Umuhora Wallet One-Time Code"
 
 # Allow sending cookies/auth headers
 CORS_ALLOW_CREDENTIALS = True
