@@ -119,6 +119,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://wallet-btc-mini.vercel.app",
     "https://umuhora-wallet.vercel.app",
+    'https://wallet-umuhora.vercel.app',
 ]
 
 # Use your SMTP server or Gmail for development
