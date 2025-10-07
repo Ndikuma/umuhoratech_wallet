@@ -130,7 +130,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "testcomlab24@gmail.com"
 EMAIL_HOST_PASSWORD = "nyhbfgzcvhsadrpp"
-DEFAULT_FROM_EMAIL = 'support@umuhora.com'
+DEFAULT_FROM_EMAIL = 'testcomlab24@gmail.com'
 
 # OTP settings
 OTP_EMAIL_SENDER = DEFAULT_FROM_EMAIL
