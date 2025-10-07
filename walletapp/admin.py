@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Wallet, Transaction
+from .models import Wallet, Transaction,User
+admin.site.register(User)
 
 @admin.register(Wallet)
 class WalletAdmin(admin.ModelAdmin):

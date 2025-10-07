@@ -34,15 +34,40 @@ class ProviderViewSet(viewsets.ReadOnlyModelViewSet):
 
 class OrderViewSet(viewsets.ModelViewSet):
     """
-    View and create orders
+    A viewset that handles creating, listing, retrieving, and updating Orders.
+    Supports both On-Chain and Lightning payments.
     """
-    queryset = Order.objects.all()
+    queryset = Order.objects.all().select_related('user', 'provider')
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Users only see their orders
-        return self.queryset.filter(user=self.request.user)
+        user = self.request.user
+        # Optionally filter by current user only
+        return self.queryset.filter(user=user).order_by('-created_at')
+
+    def perform_create(self, serializer):
+        print(self.request.data)
+        # Pass request context so serializer can access user and extra fields
+        serializer.save(user=self.request.user)
+
+    @action(detail=False, methods=['get'])
+    def lightning(self, request):
+        """
+        Optional: Filter only lightning orders
+        """
+        lightning_orders = self.get_queryset().filter(payment_method='lightning')
+        serializer = self.get_serializer(lightning_orders, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def on_chain(self, request):
+        """
+        Optional: Filter only on-chain orders
+        """
+        on_chain_orders = self.get_queryset().filter(payment_method='on_chain')
+        serializer = self.get_serializer(on_chain_orders, many=True)
+        return Response(serializer.data)
 
 
 

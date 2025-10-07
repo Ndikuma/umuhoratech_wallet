@@ -23,137 +23,275 @@ from .utils import *
 
 logger = logging.getLogger('wallet')
 
+from rest_framework import status, permissions, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django.contrib.auth import authenticate, get_user_model
+from django.db import transaction
+from django_otp.plugins.otp_email.models import EmailDevice
+from rest_framework.authtoken.models import Token
+from django.db.models import Q
+
+from .serializers import (
+    UserRegistrationSerializer,
+    LoginSerializer,
+    VerifyOTPSerializer,
+    PasswordChangeSerializer,
+    PasswordResetSerializer,
+    PasswordResetConfirmSerializer,
+)
+from .utils import create_success_response, create_error_response
+
+import logging
+logger = logging.getLogger(__name__)
+
+User = get_user_model()
+
+
 class AuthViewSet(viewsets.GenericViewSet):
-    """ViewSet for authentication operations."""
+    """Unified Authentication ViewSet using DRF TokenAuth and Email OTP."""
     permission_classes = [permissions.AllowAny]
-    
+    queryset = User.objects.all()
+
     def get_serializer_class(self):
-        if self.action == 'register':
+        if self.action == "register":
             return UserRegistrationSerializer
-        elif self.action == 'login':
+        elif self.action == "login":
             return LoginSerializer
-        elif self.action == 'logout':
-            return None
-        elif self.action == 'change_password':
+        elif self.action == "verify_email":
+            return VerifyOTPSerializer
+        elif self.action == "change_password":
             return PasswordChangeSerializer
-        return UserSerializer
-    
-    @extend_schema(
-        operation_id='auth_register',
-        summary='Register new user',
-        description='Register a new user and create associated Bitcoin wallet',
-        request=UserRegistrationSerializer,
-        responses={201: UserSerializer}
-    )
+        elif self.action == "reset_password":
+            return PasswordResetSerializer
+        elif self.action == "confirm_reset":
+            return PasswordResetConfirmSerializer
+        elif self.action == "verify_security_otp":
+            return VerifyOTPSerializer
+        return None
 
-    @action(detail=False, methods=['post'])
+    # ------------------- Register -------------------
+    @action(detail=False, methods=["post"])
     def register(self, request):
-        """Register a new user (username, email, password)."""
+        """Register new user and send email OTP."""
         serializer = UserRegistrationSerializer(data=request.data)
-
         if not serializer.is_valid():
-            return Response(
-                create_error_response(
-                    "Registration failed",
-                    serializer.errors
-                ),
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response(create_error_response(serializer.errors),
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        email = serializer.validated_data["email"]
+        if  User.objects.filter(Q(email=email) | Q(username=email)).first():
+            return Response(create_error_response("Email already exists."),
+                            status=status.HTTP_400_BAD_REQUEST)
 
         try:
             with transaction.atomic():
-                user = serializer.save()
-                token, _ = Token.objects.get_or_create(user=user)
+                user = serializer.save(is_active=False, is_email_verified=False)
+                device, _ = EmailDevice.objects.get_or_create(user=user)
+                device.generate_challenge()  # sends OTP
 
-                return Response(
-                    create_success_response({
-                        "user": UserSerializer(user).data,
-                        "token": token.key
-                    }, "Registration successful!"),
-                    status=status.HTTP_201_CREATED
-                )
-
+                return Response(create_success_response({
+                    "email": user.email,
+                    "message": "Account created. OTP sent to your email."
+                }), status=status.HTTP_201_CREATED)
         except Exception as e:
             logger.error(f"Registration error: {e}")
-            return Response(
-                create_error_response("Registration failed. Please try again."),
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-    
-    @extend_schema(
-        operation_id='auth_login',
-        summary='User login',
-        description='Authenticate user and return access token',
-        request=LoginSerializer,
-        responses={200: UserSerializer}
-    )
-    @action(detail=False, methods=['post'])
-    def login(self, request: Request) -> Response:
-        """Authenticate user and return token."""
+            return Response(create_error_response("Registration failed."),
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    # ------------------- Verify Email -------------------
+    @action(detail=False, methods=["post"])
+    def verify_email(self, request):
+        """Verify OTP to activate account."""
+        serializer = VerifyOTPSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(create_error_response(serializer.errors),
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        email = serializer.validated_data["email"]
+        otp = serializer.validated_data["otp"]
+
+        user = User.objects.filter(Q(email=email) | Q(username=email)).first()
+        if not user:
+            return Response(create_error_response("User not found."),
+                            status=status.HTTP_404_NOT_FOUND)
+
+        device = EmailDevice.objects.filter(user=user).first()
+        if not device or not device.verify_token(otp):
+            return Response(create_error_response("Invalid or expired OTP."),
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        user.is_active = True
+        user.is_email_verified = True
+        user.save()
+
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response(create_success_response({
+            "user_id": user.id,
+            "email": user.email,
+            "token": token.key,
+            "message": "Email verified successfully."
+        }), status=status.HTTP_200_OK)
+
+    # ------------------- Login -------------------
+    @action(detail=False, methods=["post"])
+    def login(self, request):
+        """Authenticate user using email or username."""
         serializer = LoginSerializer(data=request.data)
-        
         if not serializer.is_valid():
             return Response(
-                create_error_response(
-                    "Invalid input",
-                    serializer.errors
-                ),
+                create_error_response(serializer.errors),
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
-        username = serializer.validated_data['username']
-        password = serializer.validated_data['password']
-        
-        user = authenticate(username=username, password=password)
-        
+
+        identifier = serializer.validated_data["identifier"]
+        password = serializer.validated_data["password"]
+
+        user = authenticate(username=identifier, password=password)
         if not user:
             return Response(
-                create_error_response("Invalid username or password"),
+                create_error_response("Invalid credentials."),
                 status=status.HTTP_401_UNAUTHORIZED
             )
-        
-        if not user.is_active:
+
+        if not user.is_email_verified:
             return Response(
-                create_error_response("Account is inactive"),
-                status=status.HTTP_401_UNAUTHORIZED
+                create_error_response("Email not verified."),
+                status=status.HTTP_403_FORBIDDEN
             )
-        
+
         token, _ = Token.objects.get_or_create(user=user)
-   
-        
-        log_wallet_activity(user, 'user_login')
-        
+
+        # Example: determine wallet_created
+        wallet_created = hasattr(user, "wallet")  # if user has a related Wallet model
+
+        # Include tfa_required for OTP
+        tfa_required = user.is_otp_required  # from your User model
+
         return Response(
             create_success_response({
-                'user': UserSerializer(user).data,
-                'token': token.key
-            }, "Login successful"),
+                "token": token.key,
+                "tfa_required": tfa_required,
+                "wallet_created": wallet_created,
+                "user": {
+                    "id": user.id,
+                    "username": user.username,
+                    "email": user.email,
+                },
+                "message": "Login successful."
+            }),
             status=status.HTTP_200_OK
         )
-    
-    @extend_schema(
-        operation_id='auth_logout',
-        summary='User logout',
-        description='Logout user and invalidate token',
-        responses={200: dict}
-    )
-    @action(detail=False, methods=['post'], permission_classes=[permissions.IsAuthenticated])
-    def logout(self, request: Request) -> Response:
-        """Logout user and delete token."""
-        try:
-            request.user.auth_token.delete()
-            log_wallet_activity(request.user, 'user_logout')
-            
-            return Response(
-                create_success_response(message="Successfully logged out"),
-                status=status.HTTP_200_OK
-            )
-        except Exception as e:
-            logger.error(f"Logout error: {e}")
-            return Response(
-                create_error_response("Error logging out"),
-                status=status.HTTP_400_BAD_REQUEST
-            )
+    # ------------------- Resend OTP -------------------
+    @action(detail=False, methods=["post"])
+    def resend_otp(self, request):
+        print(request.data)
+        """Resend verification OTP."""
+        email = request.data.get("email")
+        user = User.objects.filter(Q(email=email) | Q(username=email)).first()
+        
+        if not user:
+            return Response(create_error_response("User not found."),
+                            status=status.HTTP_404_NOT_FOUND)
+
+        # if user.is_email_verified:
+        #     return Response(create_error_response("Email already verified."),
+        #                     status=status.HTTP_400_BAD_REQUEST)
+
+        device, _ = EmailDevice.objects.get_or_create(user=user)
+        device.generate_challenge()
+        return Response(create_success_response({"message": "OTP resent to your email."}),
+                        status=status.HTTP_200_OK)
+
+    # ------------------- Change Password -------------------
+    @action(detail=False, methods=["post"], permission_classes=[permissions.IsAuthenticated])
+    def change_password(self, request):
+        """Allow authenticated users to change password."""
+        serializer = PasswordChangeSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(create_error_response(serializer.errors),
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        current = serializer.validated_data["current_password"]
+        new = serializer.validated_data["new_password"]
+
+        user = request.user
+        if not user.check_password(current):
+            return Response(create_error_response("Current password is incorrect."),
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new)
+        user.save()
+        return Response(create_success_response({"message": "Password changed successfully."}),
+                        status=status.HTTP_200_OK)
+
+    # ------------------- Reset Password (Send OTP) -------------------
+    @action(detail=False, methods=["post"])
+    def reset_password(self, request):
+        """Send OTP for password reset."""
+        serializer = PasswordResetSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(create_error_response(serializer.errors),
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        email = serializer.validated_data["email"]
+        user = User.objects.filter(Q(email=email) | Q(username=email)).first()
+        
+        if not user:
+            return Response(create_error_response("User not found."),
+                            status=status.HTTP_404_NOT_FOUND)
+
+        device, _ = EmailDevice.objects.get_or_create(user=user)
+        device.generate_challenge()
+        return Response(create_success_response({"message": "Reset OTP sent to your email."}),
+                        status=status.HTTP_200_OK)
+
+    # ------------------- Confirm Password Reset -------------------
+    @action(detail=False, methods=["post"])
+    def confirm_reset(self, request):
+        """Confirm OTP and set new password."""
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(create_error_response(serializer.errors),
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        email = serializer.validated_data["email"]
+        otp = serializer.validated_data["otp"]
+        new_password = serializer.validated_data["password"]
+
+        user = User.objects.filter(Q(email=email) | Q(username=email)).first()
+        
+        if not user:
+            return Response(create_error_response("User not found."),
+                            status=status.HTTP_404_NOT_FOUND)
+
+        device = EmailDevice.objects.filter(user=user).first()
+        if not device or not device.verify_token(otp):
+            return Response(create_error_response("Invalid OTP."),
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+        return Response(create_success_response({"message": "Password reset successfully."}),
+                        status=status.HTTP_200_OK)
+
+    # ------------------- Verify OTP for Security -------------------
+    @action(detail=False, methods=["post"], permission_classes=[permissions.IsAuthenticated])
+    def verify_security_otp(self, request):
+        """Verify OTP for sensitive operations (security layer)."""
+        serializer = VerifyOTPSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(create_error_response(serializer.errors),
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        otp = serializer.validated_data["otp"]
+        device = EmailDevice.objects.filter(user=request.user).first()
+        if not device or not device.verify_token(otp):
+            return Response(create_error_response("Invalid OTP."),
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(create_success_response({"message": "OTP verified successfully."}),
+                        status=status.HTTP_200_OK)
 
 class UserViewSet(viewsets.ModelViewSet):
     """ViewSet for user operations."""
@@ -166,6 +304,23 @@ class UserViewSet(viewsets.ModelViewSet):
         """Return only the current user."""
         return User.objects.filter(id=self.request.user.id)
     
+    @action(detail=False, methods=["get"])
+    def me(self, request):
+        """Return authenticated user with full data as a dict."""
+        user = request.user
+
+        data = {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "is_email_verified": user.is_email_verified,
+            "tfa_required": getattr(user, "is_otp_required", False),
+            "wallet_created": hasattr(user, "wallet"),  # True if user has a related wallet
+
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
+
     @extend_schema(
         operation_id='user_profile',
         summary='Get user profile',
@@ -182,46 +337,7 @@ class UserViewSet(viewsets.ModelViewSet):
             ),
             status=status.HTTP_200_OK
         )
-    
-    @extend_schema(
-        operation_id='user_change_password',
-        summary='Change password',
-        description='Change user password',
-        request=PasswordChangeSerializer,
-        responses={200: dict}
-    )
-    @action(detail=False, methods=['post'])
-    def change_password(self, request: Request) -> Response:
-        """Change user password."""
-        serializer = PasswordChangeSerializer(data=request.data)
-        
-        if not serializer.is_valid():
-            return Response(
-                create_error_response(
-                    "Invalid input",
-                    serializer.errors
-                ),
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        user = request.user
-        
-        if not user.check_password(serializer.validated_data['old_password']):
-            return Response(
-                create_error_response("Current password is incorrect"),
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        user.set_password(serializer.validated_data['new_password'])
-        user.save()
-        
-        log_wallet_activity(user, 'password_changed')
-        
-        return Response(
-            create_success_response(message="Password changed successfully"),
-            status=status.HTTP_200_OK
-        )
-        
+
 class WalletViewSet(viewsets.ModelViewSet):
     """ViewSet for wallet operations."""
 

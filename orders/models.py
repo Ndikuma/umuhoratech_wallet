@@ -1,6 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
 from decimal import Decimal
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class Provider(models.Model):
     """Provider for payments"""
@@ -57,51 +58,84 @@ class Provider(models.Model):
 
 class Order(models.Model):
     """User order for buying or selling BTC"""
+
+    # -------------------------
+    # Choices
+    # -------------------------
     STATUS_CHOICES = [
         ("pending", "Pending"),
-        ("completed", "Completed"),
         ("awaiting_confirmation", "Awaiting Confirmation"),
+        ("completed", "Completed"),
         ("failed", "Failed"),
     ]
     DIRECTION_CHOICES = [
         ("buy", "Buy"),
         ("sell", "Sell"),
     ]
+    PAYMENT_METHOD_CHOICES = [
+        ("on_chain", "On-Chain"),
+        ("lightning", "Lightning"),
+    ]
 
+    # -------------------------
+    # Basic order info
+    # -------------------------
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
-    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name="orders")
+    provider = models.ForeignKey("Provider", on_delete=models.CASCADE, related_name="orders")
     direction = models.CharField(max_length=10, choices=DIRECTION_CHOICES, default="buy")
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, default="on_chain")
+
     amount_currency = models.CharField(max_length=10, default="USD")
-    amount = models.DecimalField(max_digits=18, decimal_places=8)
+    amount = models.DecimalField(max_digits=18, decimal_places=8,null=True,blank=True)
     fee = models.DecimalField(max_digits=18, decimal_places=8, default=0)
     total_amount = models.DecimalField(max_digits=18, decimal_places=8, default=0)
+
     # SELL-specific user payout details
     payout_data = models.JSONField(
         default=list,
         blank=True,
         help_text="Contains user account details to pay them during sell (e.g., mobile money, bank)"
     )
+
     payment_proof = models.JSONField(default=dict, blank=True)
     status = models.CharField(max_length=200, choices=STATUS_CHOICES, default="pending")
     note = models.TextField(blank=True, null=True)
 
+    # -------------------------
+    # BTC-specific
+    # -------------------------
     btc_address = models.CharField(max_length=255, blank=True, null=True)
     btc_amount = models.DecimalField(max_digits=18, decimal_places=8, blank=True, null=True)
     btc_txid = models.CharField(max_length=255, blank=True, null=True)
 
+    # -------------------------
+    # Lightning-specific
+    # -------------------------
+    ln_invoice = models.TextField(blank=True, null=True, help_text="BOLT11 invoice for Lightning payments")
+    ln_amount_sats = models.BigIntegerField(blank=True, null=True)
+    ln_payment_hash = models.CharField(max_length=255, blank=True, null=True)
+    ln_paid_at = models.DateTimeField(blank=True, null=True)
+
+    # -------------------------
+    # Timestamps
+    # -------------------------
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]
 
+    # -------------------------
+    # String representation
+    # -------------------------
     def __str__(self):
-        return f"Order #{self.id} by {self.user.username}"
+        return f"Order #{self.id} by {self.user.username} ({self.direction}, {self.payment_method})"
+
+
     def save(self, *args, **kwargs):
         """
-        Override save() to automatically update status when payment proof is provided.
+        Automatically update status when payment proof is provided.
         """
         if self.status == "pending" and self.payment_proof:
             self.status = "awaiting_confirmation"
-
         super().save(*args, **kwargs)

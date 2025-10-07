@@ -1,20 +1,22 @@
 from decimal import Decimal
 from typing import Dict, Any
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.conf import settings
 from .models import Wallet, Transaction
 from .utils import validate_bitcoin_address, is_valid_transaction_amount
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from .models import Wallet
 from .bitcoin_service import BitcoinService
 from .utils import validate_mnemonic, validate_private_key
 from bitcoinlib.mnemonic import Mnemonic
 from django.conf import settings
 import requests
+from rest_framework import serializers
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for user information."""
     
@@ -42,71 +44,48 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 
+
+
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    """Serializer for user registration with validation."""
-
-    password = serializers.CharField(
-        write_only=True,
-        min_length=8,
-        style={'input_type': 'password'},
-        help_text="Password must be at least 8 characters long"
-    )
-
-    email = serializers.EmailField(
-        required=True,
-        help_text="Valid email address required"
-    )
+    password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = [
-            'username',
-            'email',
-            'password',
-        ]
-        extra_kwargs = {
-            'username': {
-                'help_text': 'Unique username (3-150 characters)',
-                'min_length': 3,
-                'max_length': 150
-            },
-        }
-
-    def validate_username(self, value):
-        """Validate username uniqueness and format."""
-        if User.objects.filter(username__iexact=value).exists():
-            raise serializers.ValidationError("Username already exists")
-
-        if not value.replace('_', '').replace('-', '').isalnum():
-            raise serializers.ValidationError(
-                "Username can only contain letters, numbers, hyphens, and underscores"
-            )
-
-        return value.lower()
-
-    def validate_email(self, value):
-        """Validate email uniqueness."""
-        if User.objects.filter(email__iexact=value).exists():
-            raise serializers.ValidationError("Email already registered")
-        return value.lower()
-
-    def validate_password(self, value):
-        """Validate password strength."""
-        try:
-            validate_password(value)
-        except DjangoValidationError as e:
-            raise serializers.ValidationError(list(e.messages))
-        return value
+        fields = ["username", "email", "password"]
 
     def create(self, validated_data):
-        """Create user (without wallet)."""
         user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            password=validated_data['password']
+            username=validated_data["username"],
+            email=validated_data["email"],
+            password=validated_data["password"],
         )
         return user
 
+
+class LoginSerializer(serializers.Serializer):
+    identifier = serializers.CharField(help_text="Email or username")
+    password = serializers.CharField(write_only=True)
+
+
+class VerifyOTPSerializer(serializers.Serializer):
+    email = serializers.CharField()
+    otp = serializers.CharField()
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    current_password = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True)
+
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.CharField()
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    email = serializers.CharField()
+    otp = serializers.CharField()
+    password = serializers.CharField(write_only=True)
 
 class WalletSerializer(serializers.ModelSerializer):
     """Comprehensive wallet serializer."""
@@ -307,61 +286,6 @@ class WalletStatsSerializer(serializers.Serializer):
     total_received = serializers.DecimalField(max_digits=16, decimal_places=8, read_only=True)
     current_balance = serializers.DecimalField(max_digits=16, decimal_places=8, read_only=True)
     wallet_age_days = serializers.IntegerField(read_only=True)
-
-class LoginSerializer(serializers.Serializer):
-    """Serializer for user login."""
-    
-    username = serializers.CharField(
-        max_length=150,
-        help_text="Your username"
-    )
-    password = serializers.CharField(
-        style={'input_type': 'password'},
-        help_text="Your password"
-    )
-    
-    def validate(self, attrs):
-        """Validate login credentials."""
-        username = attrs.get('username')
-        password = attrs.get('password')
-        
-        if not username or not password:
-            raise serializers.ValidationError("Username and password are required")
-        
-        return attrs
-
-class PasswordChangeSerializer(serializers.Serializer):
-    """Serializer for password change."""
-    
-    old_password = serializers.CharField(
-        style={'input_type': 'password'},
-        help_text="Current password"
-    )
-    new_password = serializers.CharField(
-        min_length=8,
-        style={'input_type': 'password'},
-        help_text="New password (minimum 8 characters)"
-    )
-    new_password_confirm = serializers.CharField(
-        style={'input_type': 'password'},
-        help_text="Confirm new password"
-    )
-    
-    def validate_new_password(self, value):
-        """Validate new password strength."""
-        try:
-            validate_password(value)
-        except DjangoValidationError as e:
-            raise serializers.ValidationError(list(e.messages))
-        return value
-    
-    def validate(self, attrs):
-        """Cross-field validation."""
-        if attrs['new_password'] != attrs['new_password_confirm']:
-            raise serializers.ValidationError({
-                'new_password_confirm': "New passwords don't match"
-            })
-        return attrs
 
 
 class GenerateMnemonicSerializer(serializers.Serializer):
