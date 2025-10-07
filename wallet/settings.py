@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'drf_spectacular',
+    'django_otp',
+    'django_otp.plugins.otp_email',
 ]# Django REST Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -99,8 +101,15 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    'django_otp.middleware.OTPMiddleware',
+    'django.middleware.common.CommonMiddleware',
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+AUTHENTICATION_BACKENDS = [
+    "walletapp.backends.EmailOrUsernameBackend",  # path to your backend
+    "django.contrib.auth.backends.ModelBackend",  # keep the default
+]
+AUTH_USER_MODEL='walletapp.User'  # Custom user model
 
 ROOT_URLCONF = "wallet.urls"
 # CORS Settings
@@ -111,6 +120,18 @@ CORS_ALLOWED_ORIGINS = [
     "https://wallet-btc-mini.vercel.app",
     "https://umuhora-wallet.vercel.app",
 ]
+
+# Use your SMTP server or Gmail for development
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = '127.0.0.1'          # or your mail host
+EMAIL_USE_TLS = False
+EMAIL_PORT =1025
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+DEFAULT_FROM_EMAIL = 'no-reply@bwallet.bi'
+
+# OTP settings
+OTP_EMAIL_SENDER = DEFAULT_FROM_EMAIL
 
 # Allow sending cookies/auth headers
 CORS_ALLOW_CREDENTIALS = True

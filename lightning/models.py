@@ -1,7 +1,9 @@
 from django.db import models, transaction
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+
+User = get_user_model()
 
 
 class WalletLocal(models.Model):
@@ -31,7 +33,50 @@ class WalletLocal(models.Model):
         self.balance -= amount
         self.save()
         return self.balance
+     # ------------------- Wallet Stats -------------------
+    @property
+    def total_invoices(self):
+        return self.invoices.count()
 
+    @property
+    def total_paid_invoices(self):
+        return self.invoices.filter(status="paid").count()
+
+    @property
+    def total_pending_invoices(self):
+        return self.invoices.filter(status="pending").count()
+
+    @property
+    def total_expired_invoices(self):
+        return self.invoices.filter(status="expired").count()
+
+    @property
+    def total_received_sats(self):
+        """Total sats received (sum of paid incoming invoices)"""
+        return self.invoices.filter(status="paid", is_outgoing=False).aggregate(
+            total=models.Sum("amount")
+        )["total"] or 0
+
+    @property
+    def total_sent_sats(self):
+        """Total sats sent (sum of paid outgoing invoices)"""
+        return self.invoices.filter(status="paid", is_outgoing=True).aggregate(
+            total=models.Sum("amount")
+        )["total"] or 0
+
+    @property
+    def invoice_summary(self):
+        """Convenient dictionary with stats"""
+        return {
+            "balance": self.balance,
+            "total_invoices": self.total_invoices,
+            "paid_invoices": self.total_paid_invoices,
+            "pending_invoices": self.total_pending_invoices,
+            "expired_invoices": self.total_expired_invoices,
+            "total_received_sats": self.total_received_sats,
+            "total_sent_sats": self.total_sent_sats,
+        }
+   
 
 class Invoice(models.Model):
     STATUS_CHOICES = [

@@ -5,9 +5,29 @@ from .bitcoin_service import BitcoinService
 import logging
 from django.utils import timezone
 from bitcoinlib.wallets import wallet_exists
+from django.contrib.auth.models import AbstractUser
 import time
 logger = logging.getLogger(__name__)
 
+class User(AbstractUser):
+    """Custom User model with email verification flag."""
+
+    email = models.EmailField(unique=True)
+
+    # Email verification
+    is_email_verified = models.BooleanField(default=False)
+    email_verified_at = models.DateTimeField(blank=True, null=True)
+    is_otp_required = models.BooleanField(default=False)
+
+    def mark_email_verified(self):
+        """Mark the user's email as verified."""
+        self.is_email_verified = True
+        self.email_verified_at = timezone.now()
+        self.save(update_fields=["is_email_verified", "email_verified_at"])
+    
+    def __str__(self):
+        return self.username or self.email
+    
 class Wallet(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
@@ -267,7 +287,7 @@ class Transaction(models.Model):
     fee = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal("0.0"))
     service_fee = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal("0.0"))
     from_address = models.CharField(max_length=62, blank=True, null=True)
-    to_address = models.CharField(max_length=62)
+    to_address = models.CharField(max_length=62,blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
     confirmations = models.PositiveIntegerField(default=0)
     raw_tx = models.TextField(blank=True, null=True)
