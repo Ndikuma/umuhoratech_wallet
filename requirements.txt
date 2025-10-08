@@ -56,3 +56,6 @@ celery==5.3.6
 kombu==5.3.5
 bolt11
 django-otp
+websocket-client
+websocket-server
+websocket
