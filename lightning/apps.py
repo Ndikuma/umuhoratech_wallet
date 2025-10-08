@@ -7,6 +7,4 @@ class LightningConfig(AppConfig):
     
     def ready(self):
         import lightning.signals
-        # from .blink_ws_scheduler import schedule_blink_ws
-        # schedule_blink_ws()
-        pass
+       
