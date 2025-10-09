@@ -163,7 +163,10 @@ class AuthViewSet(viewsets.GenericViewSet):
         token, _ = Token.objects.get_or_create(user=user)
 
         # Example: determine wallet_created
+
         wallet_created = hasattr(user, "wallet")  # if user has a related Wallet model
+        if not wallet_created:
+            wallet_created=Wallet.create_wallet_for_user(user)
 
         # Include tfa_required for OTP
         tfa_required = user.is_otp_required  # from your User model
