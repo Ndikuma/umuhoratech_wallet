@@ -88,7 +88,7 @@ class AuthViewSet(viewsets.GenericViewSet):
             with transaction.atomic():
                 user = serializer.save(is_active=False, is_email_verified=False)
                 device, _ = EmailDevice.objects.get_or_create(user=user)
-                device.generate_challenge()  # sends OTP
+                # device.generate_challenge()  # sends OTP
 
                 return Response(create_success_response({
                     "email": user.email,
