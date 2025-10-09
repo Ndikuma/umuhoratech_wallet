@@ -113,7 +113,7 @@ class BlinkWalletService:
                 payment_amount = amount
 
         # Subtract from payer balance
-        self.wallet_local.subtract_balance(payment_amount or 0)
+        self.wallet_local.subtract_balance(amount)
 
         # Create mirror outgoing invoice
         mirror = Invoice.objects.create(

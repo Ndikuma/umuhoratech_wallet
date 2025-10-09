@@ -95,6 +95,20 @@ def convert_fiat_to_btc(amount: Decimal, currency: str) -> Decimal:
     except Exception:
         return Decimal("0")
 
+from decimal import Decimal, ROUND_DOWN
+
+def convert_btc_to_sats(btc_amount):
+    """
+    Convert BTC to satoshis (1 BTC = 100,000,000 sats)
+    Returns Decimal for precision.
+    """
+    if btc_amount is None:
+        return Decimal("0")
+
+    # Ensure btc_amount is a Decimal
+    btc = Decimal(str(btc_amount))
+    sats = (btc * Decimal("100000000")).quantize(Decimal("1"), rounding=ROUND_DOWN)
+    return sats
 class CalculateFeeView(APIView):
     def post(self, request):
         print(request.data)
@@ -102,7 +116,8 @@ class CalculateFeeView(APIView):
         if serializer.is_valid():
             provider_id = serializer.validated_data["provider_id"]
             amount = Decimal(serializer.validated_data["amount"])
-            currency = serializer.validated_data.get("currency", "USD")  # Default USD
+            currency = serializer.validated_data.get("currency", "USD")
+            payment_method = serializer.validated_data.get("payment_method", "on_chain")
 
             try:
                 provider = Provider.objects.get(id=provider_id, is_active=True)
@@ -116,16 +131,18 @@ class CalculateFeeView(APIView):
             fee = provider.calculate_fee(amount)
             total = (amount + fee).quantize(Decimal("0.01"))
 
-            # Convert total to BTC
+            # Convert fiat to BTC and sats
             btc_amount = convert_fiat_to_btc(amount, currency)
+            sats_amount = convert_btc_to_sats(btc_amount)
 
             return Response({
-                "provider": provider.name,
                 "amount": str(amount),
                 "fee": str(fee),
                 "total_amount": str(total),
-                "btc_amount": str(btc_amount),
                 "currency": currency,
+                "btc_amount": str(btc_amount),
+                "sats_amount": str(sats_amount),
+                "payment_method": payment_method,
             })
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
