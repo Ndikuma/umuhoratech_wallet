@@ -104,6 +104,7 @@ MIDDLEWARE = [
     'django_otp.middleware.OTPMiddleware',
     'django.middleware.common.CommonMiddleware',
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "lightning.middlewares.BackgroundInvoiceMiddleware"
 ]
 AUTHENTICATION_BACKENDS = [
     "walletapp.backends.EmailOrUsernameBackend",  # path to your backend
