@@ -154,11 +154,11 @@ class AuthViewSet(viewsets.GenericViewSet):
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
-        if not user.is_email_verified:
-            return Response(
-                create_error_response("Email not verified."),
-                status=status.HTTP_403_FORBIDDEN
-            )
+        # if not user.is_email_verified:
+        #     return Response(
+        #         create_error_response("Email not verified."),
+        #         status=status.HTTP_403_FORBIDDEN
+        #     )
 
         token, _ = Token.objects.get_or_create(user=user)
 
