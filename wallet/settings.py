@@ -123,27 +123,21 @@ CORS_ALLOWED_ORIGINS = [
     'https://wallet-umuhora.vercel.app',
 ]
 
-# Use your SMTP server or Gmail for development
-# Configuration email
+# Production-optimized Gmail settings
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_PORT = 465  # Changed from 587
+EMAIL_USE_SSL = True  # Changed from TLS
+EMAIL_USE_TLS = False
 EMAIL_HOST_USER = "testcomlab24@gmail.com"
 EMAIL_HOST_PASSWORD = "nyhbfgzcvhsadrpp"
-DEFAULT_FROM_EMAIL = 'testcomlab24@gmail.com'
+DEFAULT_FROM_EMAIL = f"Umuhora Wallet <{EMAIL_HOST_USER}>"
+EMAIL_TIMEOUT = 30
 
 # OTP settings
 OTP_EMAIL_SENDER = DEFAULT_FROM_EMAIL
-
 OTP_TOTP_ISSUER = "Umuhora Wallet"
-
-# Sender information
-OTP_EMAIL_SENDER = "Umuhora Wallet <support@umuhora.com>"
-
-# Email subject
 OTP_EMAIL_SUBJECT = "Your Umuhora Wallet One-Time Code"
-
 # Allow sending cookies/auth headers
 CORS_ALLOW_CREDENTIALS = True
 
