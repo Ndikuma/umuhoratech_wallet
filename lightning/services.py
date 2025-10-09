@@ -107,13 +107,12 @@ class BlinkWalletService:
         if "payment" in payment:
             try:
                 msg = payment.get("check", "")
-                if "sats" in msg:
-                    payment_amount = int(msg.split()[-2])
+                payment_amount = payment.get("amount", amount)
             except Exception:
                 payment_amount = amount
 
         # Subtract from payer balance
-        self.wallet_local.subtract_balance(amount)
+        self.wallet_local.subtract_balance(payment_amount)
 
         # Create mirror outgoing invoice
         mirror = Invoice.objects.create(

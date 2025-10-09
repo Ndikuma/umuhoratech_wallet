@@ -1,5 +1,7 @@
 import requests
 import os
+import bolt11
+import time
 
 class BlinkWallet:
     def __init__(self, api_key=None):
@@ -139,67 +141,73 @@ class BlinkWallet:
     #     result = self._post_query(query, variables)
     #     payment = result.get("data", {}).get("lnInvoicePaymentSend", {})
     #     return payment
-    def pay_ln_invoice(self, payment_request, wallet_id=None, amount=None):
-        import time
-        import bolt11
-
+    def pay_ln_invoice(self, payment_request, amount=None):
+        """
+        Pay a Lightning invoice.
+        - Normal invoice: pays embedded amount automatically.
+        - Zero-amount invoice: requires 'amount' in sats.
+        """
         try:
             invoice = bolt11.decode(payment_request)
         except Exception as e:
-            return f"Invalid invoice: {e}"
+            return {"error": f"Invalid invoice: {e}"}
 
-        # Amount handling
-        invoice_amount = invoice.amount_msat
-        if invoice_amount:
-            final_amount = invoice_amount // 1000  # msat → sat
+        invoice_amount_msat = getattr(invoice, "amount_msat", None)
+
+        if invoice_amount_msat and invoice_amount_msat > 0:
+            # Invoice already has an amount
+            final_amount = invoice_amount_msat // 1000
             msg_amount = f"Invoice amount: {final_amount} sats"
         elif amount:
+            # Zero-amount invoice, use provided amount
             final_amount = int(amount)
             msg_amount = f"Zero-amount invoice, using provided {final_amount} sats"
         else:
-            return "Error: Zero-amount invoice and no amount provided."
+            return {"error": "Zero-amount invoice detected. You must provide an amount."}
 
-        # Expiry check
-        created = invoice.date
-        expiry = invoice.expiry
+        # Check invoice expiry
+        created = getattr(invoice, "date", 0)
+        expiry = getattr(invoice, "expiry", 0)
         now = int(time.time())
-        if now > created + expiry:
-            return "Error: Invoice expired."
+        if expiry and now > created + expiry:
+            return {"error": "Invoice expired."}
 
-        if wallet_id is None:
-            wallet_id = self.get_btc_wallet()["id"]
+        wallet_id = self.get_btc_wallet()["id"]
 
+        # Use LnInvoicePaymentSend for normal invoices
+        # For zero-amount invoices, Blink may support 'amountSat' field
         query = """
         mutation LnInvoicePaymentSend($input: LnInvoicePaymentInput!) {
-        lnInvoicePaymentSend(input: $input) {
-            status
-            errors {
-            message
-            path
-            code
+            lnInvoicePaymentSend(input: $input) {
+                status
+                errors {
+                    message
+                    path
+                    code
+                }
             }
-        }
         }
         """
 
         input_data = {
             "walletId": str(wallet_id),
-            "paymentRequest": payment_request,
+            "paymentRequest": payment_request
         }
 
-        # Add amount only if invoice didn’t define one
-        if invoice_amount is None:
-            input_data["amount"] = final_amount
+        # # Only include amountSat if invoice is zero-amount
+        # if invoice_amount_msat is None:
+        #     input_data["amount"] = final_amount
 
         variables = {"input": input_data}
         result = self._post_query(query, variables)
-        payment = result.get("data", {}).get("lnInvoicePaymentSend", {})
 
-        # Combine check + payment response
         return {
             "check": msg_amount,
-            "payment": payment
+            "payment": result,
+            "amount": final_amount
         }
+
+
 
 
     def pay_ln_address(self, ln_address, amount, wallet_id=None):
