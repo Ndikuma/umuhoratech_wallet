@@ -93,7 +93,7 @@ class BitcoinRPCError(Exception):
 class TransactionTracker:
     """Class to track transaction status in the network"""
     
-    def __init__(self, network="testnet"):
+    def __init__(self, network="bitcoin"):
         self.network = network
         self.base_url = f"https://blockstream.info/{'testnet/' if network == 'testnet' else ''}api"
     
@@ -166,7 +166,7 @@ class BitcoinService:
     Supports creation, restoration (mnemonic/WIF), balance, addresses, transactions, QR codes.
     """
 
-    def __init__(self, wallet_name=None, fee_address=None, network="testnet"):
+    def __init__(self, wallet_name=None, fee_address=None, network="bitcoin"):
         self.wallet_name = wallet_name
         self.wallet = None
         self.fee_address = fee_address

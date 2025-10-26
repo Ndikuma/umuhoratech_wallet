@@ -61,5 +61,5 @@ websocket-server
 websocket
 python-decouple
 mysqlclient
-pymysql
+PyMySQL
 whitenoise
