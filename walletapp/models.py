@@ -37,7 +37,7 @@ class Wallet(models.Model):
     wallet_name = models.CharField(max_length=100, unique=True)
     bitcoin_address = models.CharField(max_length=62, blank=True, null=True)
     balance = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal("0.0"))
-    network = models.CharField(max_length=20, default="testnet")
+    network = models.CharField(max_length=20, default="bitcoin")
     is_service=models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

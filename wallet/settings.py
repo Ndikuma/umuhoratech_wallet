@@ -163,12 +163,39 @@ WSGI_APPLICATION = "wallet.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+from decouple import config
+DB_NAME = config("DB_NAME")
+DB_NAME_BITCOIN = config("DB_NAME_BITCOIN")
+DB_USER = config("DB_USER")
+DB_PASSWORD = config("DB_PASSWORD")
+DB_HOST = config("DB_HOST")
+DB_PORT = config("DB_PORT", default=3306, cast=int)
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT':DB_PORT,
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
+
+
+# ✅ Bitcoinlib Database URI
+BITCOINLIB_DB = (
+    f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME_BITCOIN}"
+)
 
 
 # Password validation
@@ -227,4 +254,4 @@ WALLET_SETTINGS = {
 }
 
 FEE_ADDRESS = 'your_bitcoin_fee_address_here'  # Replace with actual Bitcoin address
-BITCOINLIB_DB = BASE_DIR / "bitcoinlib.db"
+

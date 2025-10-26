@@ -59,3 +59,6 @@ django-otp
 websocket-client
 websocket-server
 websocket
+python-decouple
+mysqlclient
+whitenoise
