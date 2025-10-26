@@ -59,7 +59,7 @@ class Wallet(models.Model):
 
 
     @classmethod
-    def create_wallet_for_user(cls, user, mnemonic=None, network="testnet"):
+    def create_wallet_for_user(cls, user, mnemonic=None, network="bitcoin"):
         """Create a wallet for a user using BitcoinService and sync with bitcoinlib"""
     
         wallet_name = f"{user.username}_wallet_{int(time.time())}"
@@ -84,7 +84,7 @@ class Wallet(models.Model):
             raise
 
     @classmethod
-    def restore_wallet_for_user(cls, user, keys, network="testnet"):
+    def restore_wallet_for_user(cls, user, keys, network="bitcoin"):
         """
         Restore a wallet for a user using BitcoinService and sync with bitcoinlib.
         Uses the existing wallet name for the user or generates one if needed.
